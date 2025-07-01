@@ -72,6 +72,10 @@ document.getElementById('googleBtn').onclick = async () => {
 // === Video ===
 async function startLocalVideo() {
   try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert('Ваш браузер не поддерживает getUserMedia.');
+      return;
+    }
     localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     localVideo.srcObject = localStream;
     localVideo.classList.remove('hidden');
@@ -80,7 +84,8 @@ async function startLocalVideo() {
     updateMicUI();
     updateCamUI();
   } catch (e) {
-    alert('Нет доступа к камере/микрофону');
+    alert('Ошибка доступа к камере/микрофону: ' + e.message);
+    console.error(e);
   }
 }
 
@@ -96,22 +101,35 @@ function updateCamUI() {
 }
 
 micBtn.onclick = () => {
+  if (!localStream) {
+    alert('Камера/микрофон не инициализированы!');
+    return;
+  }
   micEnabled = !micEnabled;
-  if (localStream) localStream.getAudioTracks().forEach(t => t.enabled = micEnabled);
+  localStream.getAudioTracks().forEach(t => t.enabled = micEnabled);
   updateMicUI();
 };
 camBtn.onclick = () => {
+  if (!localStream) {
+    alert('Камера/микрофон не инициализированы!');
+    return;
+  }
   camEnabled = !camEnabled;
   updateCamUI();
 };
 
-stopBtn.onclick = () => { endCall(); };
-nextBtn.onclick = () => { endCall(true); };
+stopBtn.onclick = () => {
+  endCall();
+};
+nextBtn.onclick = () => {
+  endCall(true);
+};
 chatBtn.onclick = () => {
+  if (!chatPanel) return;
   chatPanel.classList.toggle('open');
   if (chatPanel.classList.contains('open')) {
     setTimeout(() => {
-      chatInput.focus();
+      chatInput && chatInput.focus();
     }, 120);
   }
 };
