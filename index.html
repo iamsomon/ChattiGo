@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>ChattiGo — Чат-рулетка</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <span class="logo">ChattiGo</span>
+    <button id="profileBtn">Профиль</button>
+    <span id="onlineCount">0 онлайн</span>
+  </header>
+  <main id="main">
+    <section id="videoSection" class="split">
+      <video id="remoteVideo" autoplay playsinline></video>
+      <video id="localVideo" autoplay playsinline muted></video>
+      <button id="switchMode">PIP/Сплит</button>
+    </section>
+    <section id="chatSection">
+      <div id="chatMessages"></div>
+      <form id="chatForm">
+        <input id="chatInput" autocomplete="off" placeholder="Сообщение...">
+        <button type="submit">Отправить</button>
+      </form>
+    </section>
+  </main>
+  <div id="profileModal" class="modal hidden">
+    <form id="profileForm">
+      <label>Имя: <input id="displayName" maxlength="20"></label>
+      <label>Тема: <select id="themeSelect"><option value="light">Светлая</option><option value="dark">Тёмная</option></select></label>
+      <button type="submit">Сохранить</button>
+      <button type="button" id="logoutBtn">Выйти</button>
+    </form>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
