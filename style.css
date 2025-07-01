@@ -1,3 +1,23 @@
+/* Онлайн индикатор и счётчик */
+.online-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+  background: #e74c3c; /* красная по умолчанию */
+  transition: background 0.2s;
+}
+.online-dot.online { background: #27ae60; }
+.online-dot.offline { background: #e74c3c; }
+
+#onlineCount {
+  font-weight: 600;
+  font-size: 1em;
+  margin-right: 6px;
+  vertical-align: middle;
+}
 * {
   margin: 0;
   padding: 0;

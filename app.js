@@ -23,11 +23,14 @@ const stopBtn = document.getElementById('stopBtn');
 const nextBtn = document.getElementById('nextBtn');
 const chatBtn = document.getElementById('chatBtn');
 const chatPanel = document.getElementById('chatPanel');
+const typingIndicator = document.getElementById('typingIndicator');
 const chatMessages = document.getElementById('chatMessages');
 const chatForm = document.getElementById('chatForm');
 const chatInput = document.getElementById('chatInput');
 const authModal = document.getElementById('authModal');
 const searchModal = document.getElementById('searchModal');
+const onlineCountEl = document.getElementById('onlineCount');
+const onlineDotEl = document.getElementById('onlineDot');
 
 let currentUser = null;
 let localStream = null;
@@ -39,17 +42,45 @@ let camEnabled = true;
 let isSearching = false;
 let myQueueRef = null;
 
+// === Онлайн-статус пользователя ===
+function setOnlineStatus(isOnline) {
+  if (!auth.currentUser) return;
+  db.ref('presence/' + auth.currentUser.uid).set(isOnline ? true : null);
+  if (isOnline) db.ref('presence/' + auth.currentUser.uid).onDisconnect().remove();
+}
+
+// === Счётчик онлайн ===
+function listenOnlineCount() {
+  db.ref('presence').on('value', snap => {
+    const count = snap.numChildren();
+    if (onlineCountEl) onlineCountEl.textContent = count;
+    if (onlineDotEl) {
+      onlineDotEl.classList.toggle('online', count > 0);
+      onlineDotEl.classList.toggle('offline', count === 0);
+    }
+  });
+}
+
+// === UI: Выход из профиля ===
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+  logoutBtn.onclick = () => auth.signOut();
+}
+
 // === Auth ===
 auth.onAuthStateChanged(async user => {
   if (!user) {
     authModal.classList.remove('hidden');
+    setOnlineStatus(false);
     return;
   }
   currentUser = user;
+  setOnlineStatus(true);
   authModal.classList.add('hidden');
   await startLocalVideo();
   startSearching();
   chatPanel.classList.remove('open'); // Чат скрыт по умолчанию
+  listenOnlineCount();
 });
 
 document.getElementById('authForm').onsubmit = async e => {
@@ -136,31 +167,87 @@ chatBtn.onclick = () => {
   }
 };
 
+// === Темы ===
+const themeBtn = document.getElementById('themeBtn');
+if (themeBtn) {
+  themeBtn.onclick = () => {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : '');
+  };
+  // При загрузке
+  if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+}
+
 // === Поиск собеседника ===
+// === Atomic Matching Queue ===
 function startSearching() {
   if (isSearching) return;
   isSearching = true;
   searchModal.classList.remove('hidden');
   const queueRef = db.ref('queue');
-  myQueueRef = queueRef.push({ uid: currentUser.uid, ts: Date.now() });
+  // Добавляем себя в очередь с уникальным ключом
+  myQueueRef = queueRef.push({ uid: currentUser.uid, ts: Date.now(), looking: true });
   myQueueRef.onDisconnect().remove();
-  queueRef.on('child_added', snap => {
-    if (snap.key === myQueueRef.key) return;
-    connectWith(snap.val().uid, snap.key);
+
+  // Слушаем только свой элемент на предмет match
+  myQueueRef.on('value', async snap => {
+    const val = snap.val();
+    if (!val) return; // удалён
+    if (val.match && val.match.uid && val.match.key) {
+      // Нас выбрали, соединяемся
+      connectWith(val.match.uid, val.match.key, true);
+    }
   });
+
+  // Пытаемся найти другого ожидающего пользователя (атомарно)
+  tryMatch();
+
   document.getElementById('cancelSearch').onclick = () => {
     isSearching = false;
-    myQueueRef.remove();
+    if (myQueueRef) myQueueRef.remove();
     searchModal.classList.add('hidden');
-    queueRef.off();
+    myQueueRef && myQueueRef.off();
   };
 }
 
-async function connectWith(partnerUid, partnerKey) {
+async function tryMatch() {
+  if (!myQueueRef) return;
+  const queueRef = db.ref('queue');
+  // Получаем снимок очереди (один раз)
+  const snap = await queueRef.once('value');
+  const myKey = myQueueRef.key;
+  let found = null;
+  snap.forEach(child => {
+    const v = child.val();
+    if (child.key !== myKey && v.looking && !v.match) {
+      found = { uid: v.uid, key: child.key };
+      return true; // break
+    }
+  });
+  if (found) {
+    // Атомарно помечаем match для себя и собеседника
+    const updates = {};
+    updates[myKey + '/match'] = found;
+    updates[found.key + '/match'] = { uid: currentUser.uid, key: myKey };
+    updates[myKey + '/looking'] = false;
+    updates[found.key + '/looking'] = false;
+    await queueRef.update(updates);
+    // После этого оба получат событие on('value') и вызовут connectWith
+  }
+}
+
+// isPassive = true, если нас выбрали, иначе false (мы инициатор)
+async function connectWith(partnerUid, partnerKey, isPassive = false) {
   searchModal.classList.add('hidden');
   isSearching = false;
-  if (myQueueRef) myQueueRef.remove();
-  db.ref('queue/' + partnerKey).remove();
+  // Удаляем себя и собеседника из очереди (только если мы инициатор)
+  if (myQueueRef) myQueueRef.off();
+  if (!isPassive) {
+    if (myQueueRef) myQueueRef.remove();
+    db.ref('queue/' + partnerKey).remove();
+  } else {
+    if (myQueueRef) myQueueRef.remove();
+  }
   roomId = [currentUser.uid, partnerUid].sort().join('_');
   await setupPeerConnection();
   listenToChat();
@@ -210,7 +297,7 @@ function endCall(findNext) {
   if (roomId) { db.ref('rooms/' + roomId).remove(); roomId = null; }
   if (myQueueRef) { myQueueRef.remove(); myQueueRef = null; }
   remoteVideo.srcObject = null;
-  if (findNext) startSearching();
+  if (findNext) setTimeout(() => startSearching(), 200);
 }
 
 // === Чат ===
@@ -220,13 +307,39 @@ chatForm.onsubmit = e => {
   if (!msg || !roomId) return;
   db.ref('rooms/' + roomId + '/messages').push({ text: msg, sender: currentUser.uid, ts: Date.now() });
   chatInput.value = '';
+  setTyping(false);
 };
+
+// === Индикатор "печатает" ===
+let typingTimeout = null;
+chatInput.addEventListener('input', () => {
+  setTyping(true);
+  clearTimeout(typingTimeout);
+  typingTimeout = setTimeout(() => setTyping(false), 2000);
+});
+
+function setTyping(isTyping) {
+  if (!roomId) return;
+  db.ref('rooms/' + roomId + '/typing/' + currentUser.uid).set(isTyping ? Date.now() : null);
+}
 
 function listenToChat() {
   if (!roomId) return;
   db.ref('rooms/' + roomId + '/messages').on('child_added', snap => {
     const m = snap.val();
     addMsg(m);
+  });
+
+  // Индикатор "печатает"
+  const partnerUid = roomId.split('_').find(uid => uid !== currentUser.uid);
+  db.ref('rooms/' + roomId + '/typing/' + partnerUid).on('value', snap => {
+    if (typingIndicator) {
+      if (snap.val()) {
+        typingIndicator.classList.remove('hidden');
+      } else {
+        typingIndicator.classList.add('hidden');
+      }
+    }
   });
 }
 
@@ -244,4 +357,6 @@ function addMsg(m) {
 window.onbeforeunload = () => {
   if (roomId) db.ref('rooms/' + roomId).remove();
   if (myQueueRef) myQueueRef.remove();
+  setTyping(false);
+  setOnlineStatus(false);
 };
