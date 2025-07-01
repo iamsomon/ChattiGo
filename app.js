@@ -23,7 +23,7 @@ const chatBtn = document.getElementById('chatBtn');
 const chatPanel = document.getElementById('chatPanel');
 const chatMessages = document.getElementById('chatMessages');
 const chatForm = document.getElementById('chatForm');
-const chatInput = document.getElementById('authPass');
+const chatInput = document.getElementById('chatInput');
 const authModal = document.getElementById('authModal');
 const searchModal = document.getElementById('searchModal');
 
@@ -45,8 +45,9 @@ auth.onAuthStateChanged(async user => {
   }
   currentUser = user;
   authModal.classList.add('hidden');
-  startLocalVideo();
+  await startLocalVideo();
   startSearching();
+  chatPanel.classList.remove('open'); // Чат скрыт по умолчанию
 });
 
 document.getElementById('authForm').onsubmit = async e => {
@@ -91,6 +92,7 @@ function updateCamUI() {
   camBtn.setAttribute('aria-pressed', camEnabled);
   camBtn.style.opacity = camEnabled ? '1' : '0.5';
   localVideo.style.opacity = camEnabled ? '0.85' : '0.2';
+  if (localStream) localStream.getVideoTracks().forEach(t => t.enabled = camEnabled);
 }
 
 micBtn.onclick = () => {
@@ -100,13 +102,19 @@ micBtn.onclick = () => {
 };
 camBtn.onclick = () => {
   camEnabled = !camEnabled;
-  if (localStream) localStream.getVideoTracks().forEach(t => t.enabled = camEnabled);
   updateCamUI();
 };
 
 stopBtn.onclick = () => { endCall(); };
 nextBtn.onclick = () => { endCall(true); };
-chatBtn.onclick = () => { chatPanel.classList.toggle('open'); };
+chatBtn.onclick = () => {
+  chatPanel.classList.toggle('open');
+  if (chatPanel.classList.contains('open')) {
+    setTimeout(() => {
+      chatInput.focus();
+    }, 120);
+  }
+};
 
 // === Поиск собеседника ===
 function startSearching() {
@@ -163,7 +171,7 @@ async function setupPeerConnection() {
         await pc.setRemoteDescription(new RTCSessionDescription(snap.val()));
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
-        await roomRef.child('answer').set({ sdp: answer.sdp, type: offer.type });
+        await roomRef.child('answer').set({ sdp: answer.sdp, type: answer.type });
       }
     });
   }
