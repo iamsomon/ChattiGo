@@ -17,184 +17,439 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js');
 }
 
-// === UI helpers ===
-const $ = s => document.querySelector(s);
-const $$ = s => document.querySelectorAll(s);
-const body = document.body;
-const videoSection = $('#videoSection');
-const localVideo = $('#localVideo');
-const remoteVideo = $('#remoteVideo');
-const chatSection = $('#chatSection');
-const chatMessages = $('#chatMessages');
-const chatForm = $('#chatForm');
-const chatInput = $('#chatInput');
-const callControls = $('#callControls');
-const micToggle = $('#micToggle');
-const camToggle = $('#camToggle');
-const endCallBtn = $('#endCallBtn');
-const pipToggle = $('#pipToggle');
-const timerDisplay = $('#timerDisplay');
-
+// === Глобальные переменные ===
 let currentUser = null;
 let localStream = null;
 let remoteStream = null;
 let pc = null;
 let roomId = null;
 let callTimer = null;
+let callStartTime = null;
 let micEnabled = true;
 let camEnabled = true;
+let isSearching = false;
+let myQueueRef = null;
 
-// === Auth ===
-function initAuth() {
-  auth.onAuthStateChanged(async user => {
+// === DOM элементы ===
+const localVideo = document.getElementById('localVideo');
+const remoteVideo = document.getElementById('remoteVideo');
+const chatMessages = document.getElementById('chatMessages');
+const chatForm = document.getElementById('chatForm');
+const chatInput = document.getElementById('chatInput');
+const timerDisplay = document.getElementById('timerDisplay');
+const micToggle = document.getElementById('micToggle');
+const camToggle = document.getElementById('camToggle');
+const endCallBtn = document.getElementById('endCallBtn');
+const authModal = document.getElementById('authModal');
+const searchModal = document.getElementById('searchModal');
+
+// === Инициализация ===
+async function init() {
+  await initAuth();
+  await startLocalVideo();
+  setupEventListeners();
+}
+
+// === Авторизация ===
+async function initAuth() {
+  auth.onAuthStateChanged(async (user) => {
     if (!user) {
       showAuthModal();
       return;
     }
+    
     currentUser = user;
-    setupUser(user);
+    hideAuthModal();
+    
+    // Обновляем онлайн статус
+    const onlineRef = db.ref(`online/${user.uid}`);
+    onlineRef.set(true);
+    onlineRef.onDisconnect().remove();
+    
+    // Начинаем поиск собеседника
+    startSearching();
   });
 }
 
 function showAuthModal() {
-  const modal = document.createElement('div');
-  modal.className = 'modal';
-  modal.innerHTML = `
-    <form id="authForm">
-      <input id="authEmail" type="email" placeholder="Email">
-      <input id="authPass" type="password" placeholder="Пароль">
-      <button type="submit">Войти</button>
-      <button type="button" id="regBtn">Регистрация</button>
-      <button type="button" id="anonBtn">Анонимно</button>
-      <button type="button" id="googleBtn">Google</button>
-    </form>
-  `;
-  document.body.appendChild(modal);
-  $('#authForm').onsubmit = e => {
-    e.preventDefault();
-    auth.signInWithEmailAndPassword($('#authEmail').value, $('#authPass').value).catch(alert);
-  };
-  $('#regBtn').onclick = () => {
-    auth.createUserWithEmailAndPassword($('#authEmail').value, $('#authPass').value).catch(alert);
-  };
-  $('#anonBtn').onclick = () => {
-    auth.signInAnonymously().catch(alert);
-  };
-  $('#googleBtn').onclick = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).catch(alert);
-  };
+  authModal.classList.remove('hidden');
 }
 
-async function setupUser(user) {
-  const snap = await db.ref('users/' + user.uid).once('value');
-  const data = snap.val() || {};
-  body.classList.toggle('dark', data.theme === 'dark');
-  findPartner();
+function hideAuthModal() {
+  authModal.classList.add('hidden');
 }
 
-// === Video Call ===
-async function startVideoCall() {
-  localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-  localVideo.srcObject = localStream;
-  pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
-  localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
-  pc.ontrack = e => {
-    if (!remoteStream) {
-      remoteStream = new MediaStream();
-      remoteVideo.srcObject = remoteStream;
-    }
-    remoteStream.addTrack(e.track);
-  };
-  pc.onicecandidate = e => {
-    if (e.candidate) {
-      db.ref('rooms/' + roomId + '/candidates/' + currentUser.uid).push(e.candidate.toJSON());
-    }
-  };
-  setupRoom();
+// === Настройка обработчиков событий ===
+function setupEventListeners() {
+  // Авторизация
+  document.getElementById('authForm').addEventListener('submit', handleLogin);
+  document.getElementById('regBtn').addEventListener('click', handleRegister);
+  document.getElementById('anonBtn').addEventListener('click', handleAnonymousLogin);
+  document.getElementById('googleBtn').addEventListener('click', handleGoogleLogin);
+  
+  // Управление звонком
+  micToggle.addEventListener('click', toggleMicrophone);
+  camToggle.addEventListener('click', toggleCamera);
+  endCallBtn.addEventListener('click', endCall);
+  
+  // Чат
+  chatForm.addEventListener('submit', sendMessage);
+  
+  // Поиск
+  document.getElementById('cancelSearch').addEventListener('click', cancelSearch);
 }
 
-function setupRoom() {
-  const roomRef = db.ref('rooms/' + roomId);
-  roomRef.child('offer').on('value', async snap => {
-    if (snap.exists()) {
-      await pc.setRemoteDescription(new RTCSessionDescription(snap.val()));
-      const answer = await pc.createAnswer();
-      await pc.setLocalDescription(answer);
-      await roomRef.child('answer').set({ sdp: answer.sdp, type: answer.type });
-    }
-  });
-  roomRef.child('candidates').on('child_added', snap => {
-    snap.forEach(c => {
-      pc.addIceCandidate(new RTCIceCandidate(c.val())).catch(console.warn);
-    });
-  });
-}
-
-// === Call Controls ===
-micToggle.onclick = () => {
-  micEnabled = !micEnabled;
-  localStream.getAudioTracks().forEach(track => track.enabled = micEnabled);
-};
-
-camToggle.onclick = () => {
-  camEnabled = !camEnabled;
-  localStream.getVideoTracks().forEach(track => track.enabled = camEnabled);
-};
-
-endCallBtn.onclick = () => {
-  if (roomId) db.ref('rooms/' + roomId).remove();
-  location.reload();
-};
-
-pipToggle.onclick = () => {
-  if (document.pictureInPictureElement) {
-    document.exitPictureInPicture();
-  } else {
-    localVideo.requestPictureInPicture();
+// === Обработчики авторизации ===
+async function handleLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('authEmail').value;
+  const password = document.getElementById('authPass').value;
+  
+  try {
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch (error) {
+    alert('Ошибка входа: ' + error.message);
   }
-};
+}
 
-// === Timer ===
+async function handleRegister() {
+  const email = document.getElementById('authEmail').value;
+  const password = document.getElementById('authPass').value;
+  
+  try {
+    await auth.createUserWithEmailAndPassword(email, password);
+  } catch (error) {
+    alert('Ошибка регистрации: ' + error.message);
+  }
+}
+
+async function handleAnonymousLogin() {
+  try {
+    await auth.signInAnonymously();
+  } catch (error) {
+    alert('Ошибка анонимного входа: ' + error.message);
+  }
+}
+
+async function handleGoogleLogin() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  try {
+    await auth.signInWithPopup(provider);
+  } catch (error) {
+    alert('Ошибка входа через Google: ' + error.message);
+  }
+}
+
+// === Работа с видео ===
+async function startLocalVideo() {
+  try {
+    localStream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true
+    });
+    localVideo.srcObject = localStream;
+  } catch (error) {
+    console.error('Ошибка доступа к камере/микрофону:', error);
+    alert('Не удалось получить доступ к камере и микрофону. Проверьте разрешения.');
+  }
+}
+
+function toggleMicrophone() {
+  micEnabled = !micEnabled;
+  if (localStream) {
+    localStream.getAudioTracks().forEach(track => {
+      track.enabled = micEnabled;
+    });
+  }
+  micToggle.style.opacity = micEnabled ? '1' : '0.5';
+}
+
+function toggleCamera() {
+  camEnabled = !camEnabled;
+  if (localStream) {
+    localStream.getVideoTracks().forEach(track => {
+      track.enabled = camEnabled;
+    });
+  }
+  camToggle.style.opacity = camEnabled ? '1' : '0.5';
+}
+
+// === Поиск собеседника ===
+function startSearching() {
+  if (isSearching) return;
+  
+  isSearching = true;
+  showSearchModal();
+  
+  const queueRef = db.ref('queue');
+  myQueueRef = queueRef.push({
+    uid: currentUser.uid,
+    timestamp: firebase.database.ServerValue.TIMESTAMP
+  });
+  
+  myQueueRef.onDisconnect().remove();
+  
+  // Слушаем других пользователей в очереди
+  queueRef.on('child_added', (snapshot) => {
+    const data = snapshot.val();
+    const key = snapshot.key;
+    
+    if (data.uid !== currentUser.uid && key !== myQueueRef.key) {
+      // Найден собеседник
+      connectWithPartner(data.uid, key);
+    }
+  });
+}
+
+function showSearchModal() {
+  searchModal.classList.remove('hidden');
+}
+
+function hideSearchModal() {
+  searchModal.classList.add('hidden');
+}
+
+function cancelSearch() {
+  if (myQueueRef) {
+    myQueueRef.remove();
+    myQueueRef = null;
+  }
+  isSearching = false;
+  hideSearchModal();
+  
+  // Можно добавить логику возврата к главному экрану
+}
+
+// === WebRTC соединение ===
+async function connectWithPartner(partnerUid, partnerKey) {
+  hideSearchModal();
+  isSearching = false;
+  
+  // Удаляем записи из очереди
+  if (myQueueRef) {
+    myQueueRef.remove();
+    myQueueRef = null;
+  }
+  db.ref(`queue/${partnerKey}`).remove();
+  
+  // Создаем ID комнаты
+  roomId = [currentUser.uid, partnerUid].sort().join('_');
+  
+  // Настраиваем WebRTC
+  await setupPeerConnection();
+  
+  // Начинаем таймер звонка
+  startCallTimer();
+  
+  // Слушаем чат
+  listenToChat();
+}
+
+async function setupPeerConnection() {
+  const configuration = {
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:stun1.l.google.com:19302' }
+    ]
+  };
+  
+  pc = new RTCPeerConnection(configuration);
+  
+  // Добавляем локальные треки
+  if (localStream) {
+    localStream.getTracks().forEach(track => {
+      pc.addTrack(track, localStream);
+    });
+  }
+  
+  // Обрабатываем удаленные треки
+  pc.ontrack = (event) => {
+    if (event.streams && event.streams[0]) {
+      remoteVideo.srcObject = event.streams[0];
+    }
+  };
+  
+  // Обрабатываем ICE кандидатов
+  pc.onicecandidate = (event) => {
+    if (event.candidate) {
+      db.ref(`rooms/${roomId}/candidates/${currentUser.uid}`).push(
+        event.candidate.toJSON()
+      );
+    }
+  };
+  
+  // Слушаем изменения состояния соединения
+  pc.onconnectionstatechange = () => {
+    if (pc.connectionState === 'disconnected' || 
+        pc.connectionState === 'failed' || 
+        pc.connectionState === 'closed') {
+      handlePeerDisconnection();
+    }
+  };
+  
+  // Инициируем соединение
+  await initiateConnection();
+}
+
+async function initiateConnection() {
+  const roomRef = db.ref(`rooms/${roomId}`);
+  
+  // Создаем offer если мы инициатор (по UID)
+  const partnerUid = roomId.split('_').find(uid => uid !== currentUser.uid);
+  const isInitiator = currentUser.uid < partnerUid;
+  
+  if (isInitiator) {
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    await roomRef.child('offer').set({
+      sdp: offer.sdp,
+      type: offer.type
+    });
+    
+    // Слушаем answer
+    roomRef.child('answer').on('value', async (snapshot) => {
+      const answer = snapshot.val();
+      if (answer && !pc.currentRemoteDescription) {
+        await pc.setRemoteDescription(new RTCSessionDescription(answer));
+      }
+    });
+  } else {
+    // Слушаем offer
+    roomRef.child('offer').on('value', async (snapshot) => {
+      const offer = snapshot.val();
+      if (offer && !pc.currentRemoteDescription) {
+        await pc.setRemoteDescription(new RTCSessionDescription(offer));
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+        await roomRef.child('answer').set({
+          sdp: answer.sdp,
+          type: answer.type
+        });
+      }
+    });
+  }
+  
+  // Слушаем ICE кандидатов
+  roomRef.child('candidates').on('child_added', (snapshot) => {
+    const candidateData = snapshot.val();
+    const senderId = snapshot.ref.parent.key;
+    
+    if (senderId !== currentUser.uid) {
+      Object.values(candidateData).forEach(candidate => {
+        pc.addIceCandidate(new RTCIceCandidate(candidate));
+      });
+    }
+  });
+}
+
+function handlePeerDisconnection() {
+  alert('Собеседник отключился');
+  endCall();
+}
+
+// === Таймер звонка ===
 function startCallTimer() {
-  let seconds = 0;
-  callTimer = setInterval(() => {
-    seconds++;
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    timerDisplay.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-  }, 1000);
+  callStartTime = Date.now();
+  callTimer = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+  const elapsed = Math.floor((Date.now() - callStartTime) / 1000);
+  const minutes = Math.floor(elapsed / 60);
+  const seconds = elapsed % 60;
+  timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
 function stopCallTimer() {
-  clearInterval(callTimer);
+  if (callTimer) {
+    clearInterval(callTimer);
+    callTimer = null;
+  }
   timerDisplay.textContent = '00:00';
 }
 
-// === Chat ===
-chatForm.onsubmit = e => {
+// === Чат ===
+function sendMessage(e) {
   e.preventDefault();
-  const msg = chatInput.value.trim();
-  if (!msg) return;
-  addChatMessage(msg, true);
-  db.ref('rooms/' + roomId + '/chat').push({ from: currentUser.uid, msg });
+  const message = chatInput.value.trim();
+  if (!message || !roomId) return;
+  
+  const messageData = {
+    text: message,
+    sender: currentUser.uid,
+    timestamp: firebase.database.ServerValue.TIMESTAMP
+  };
+  
+  db.ref(`rooms/${roomId}/messages`).push(messageData);
   chatInput.value = '';
-};
-
-function addChatMessage(msg, isMe) {
-  const div = document.createElement('div');
-  div.className = `chat-message ${isMe ? 'me' : ''}`;
-  div.textContent = msg;
-  chatMessages.appendChild(div);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-function listenForMessages() {
-  db.ref('rooms/' + roomId + '/chat').on('child_added', snap => {
-    const { from, msg } = snap.val();
-    if (from !== currentUser.uid) addChatMessage(msg, false);
+function listenToChat() {
+  if (!roomId) return;
+  
+  db.ref(`rooms/${roomId}/messages`).on('child_added', (snapshot) => {
+    const message = snapshot.val();
+    displayMessage(message);
   });
 }
 
-// === Initialization ===
-initAuth();
+function displayMessage(message) {
+  const messageElement = document.createElement('div');
+  const isOwnMessage = message.sender === currentUser.uid;
+  
+  messageElement.className = `chat-message ${isOwnMessage ? 'sent' : 'received'}`;
+  messageElement.innerHTML = `
+    ${!isOwnMessage ? `
+      <div class="message-avatar">
+        <img src="https://i.pravatar.cc/32?u=${message.sender}" alt="Avatar">
+      </div>
+    ` : ''}
+    <div class="message-content">
+      <div class="message-text">${message.text}</div>
+      <div class="message-time">${new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'})}</div>
+    </div>
+  `;
+  
+  chatMessages.appendChild(messageElement);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// === Завершение звонка ===
+function endCall() {
+  // Останавливаем таймер
+  stopCallTimer();
+  
+  // Закрываем соединение
+  if (pc) {
+    pc.close();
+    pc = null;
+  }
+  
+  // Удаляем комнату
+  if (roomId) {
+    db.ref(`rooms/${roomId}`).remove();
+    roomId = null;
+  }
+  
+  // Останавливаем локальное видео
+  if (localStream) {
+    localStream.getTracks().forEach(track => track.stop());
+    localStream = null;
+  }
+  
+  // Перезагружаем страницу для нового поиска
+  location.reload();
+}
+
+// === Обработка отключения ===
+window.addEventListener('beforeunload', () => {
+  if (roomId) {
+    db.ref(`rooms/${roomId}`).remove();
+  }
+  if (myQueueRef) {
+    myQueueRef.remove();
+  }
+});
+
+// Запуск приложения
+init();
