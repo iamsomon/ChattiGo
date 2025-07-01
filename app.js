@@ -7,7 +7,8 @@ const firebaseConfig = {
   storageBucket: "chattigo-464317.appspot.com",
   messagingSenderId: "462066177305",
   appId: "1:462066177305:web:ca0f2491365cebf6f9a188",
-  measurementId: "G-6LH7TBYR05"
+  measurementId: "G-6LH7TBYR05",
+  databaseURL: "https://chattigo-464317-default-rtdb.firebaseio.com/"
 };
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
