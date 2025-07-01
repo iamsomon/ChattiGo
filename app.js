@@ -1,4 +1,4 @@
-// === Firebase config (замените на свои ключи!) ===
+// === Firebase config ===
 const firebaseConfig = {
   apiKey: "AIzaSyAun2CwLPEguSFdNbK3UJKzhBCYag8p08A",
   authDomain: "chattigo-464317.firebaseapp.com",
@@ -43,10 +43,13 @@ let chatHistory = [];
 let mode = 'split'; // split | pip
 let searching = false;
 let myQueueRef = null;
+let roomId = null;
+let pc = null;
+let localStream = null;
+let remoteStream = null;
 
 // === Auth ===
 function showAuth() {
-  // Минимальный UI для входа
   const d = document.createElement('div');
   d.className = 'modal';
   d.innerHTML = `<form id="authForm" style="background:var(--bg);color:var(--fg);padding:2em;border-radius:12px;display:flex;flex-direction:column;gap:1em;min-width:220px;">
@@ -81,7 +84,6 @@ auth.onAuthStateChanged(async user => {
   }
   currentUser = user;
   currentName = user.displayName || 'Гость';
-  // Получить тему и имя из профиля
   const snap = await db.ref('users/' + user.uid).once('value');
   const data = snap.val() || {};
   currentTheme = data.theme || 'light';
@@ -93,6 +95,7 @@ auth.onAuthStateChanged(async user => {
   profileModal.classList.add('hidden');
   $('.modal')?.remove();
   db.ref('users/' + user.uid).update({ name: currentName, theme: currentTheme });
+  findPartner();
 });
 
 profileBtn.onclick = () => {
@@ -126,7 +129,6 @@ function updateOnlineCount() {
 }
 updateOnlineCount();
 
-// === Online presence ===
 auth.onAuthStateChanged(user => {
   if (!user) return;
   const ref = db.ref('online/' + user.uid);
@@ -134,25 +136,11 @@ auth.onAuthStateChanged(user => {
   ref.onDisconnect().remove();
 });
 
-// === Video modes ===
 switchModeBtn.onclick = () => {
   mode = mode === 'split' ? 'pip' : 'split';
   videoSection.className = mode;
 };
 
-// === WebRTC ===
-let pc = null;
-let localStream = null;
-let remoteStream = null;
-let roomId = null;
-
-async function startVideo() {
-  localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-  localVideo.srcObject = localStream;
-}
-startVideo();
-
-auth.onAuthStateChanged(user => {
 // === Поиск собеседника с UX ===
 async function findPartner() {
   if (searching) return;
@@ -173,7 +161,6 @@ async function findPartner() {
     await connectToRoom(roomId, snap.val().uid);
   };
   queueRef.on('child_added', onFound);
-  // Кнопка отмены поиска
   searchModal.querySelector('#cancelSearch').onclick = () => {
     searching = false;
     myQueueRef.remove();
@@ -181,10 +168,6 @@ async function findPartner() {
     queueRef.off('child_added', onFound);
   };
 }
-
-auth.onAuthStateChanged(user => {
-  if (user) findPartner();
-});
 
 function showSearchModal() {
   if (searchModal) searchModal.remove();
@@ -202,6 +185,12 @@ function hideSearchModal() {
   searchModal = null;
 }
 
+async function startVideo() {
+  localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+  localVideo.srcObject = localStream;
+}
+startVideo();
+
 async function connectToRoom(roomId, partnerUid) {
   try {
     pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
@@ -218,7 +207,6 @@ async function connectToRoom(roomId, partnerUid) {
         db.ref('rooms/' + roomId + '/candidates/' + currentUser.uid).push(e.candidate.toJSON());
       }
     };
-    // Signaling
     const roomRef = db.ref('rooms/' + roomId);
     if (currentUser.uid < partnerUid) {
       const offer = await pc.createOffer();
@@ -239,7 +227,6 @@ async function connectToRoom(roomId, partnerUid) {
         }
       });
     }
-    // ICE
     roomRef.child('candidates').on('child_added', snap => {
       if (snap.key !== currentUser.uid) {
         snap.forEach(c => {
@@ -247,9 +234,8 @@ async function connectToRoom(roomId, partnerUid) {
         });
       }
     });
-    // Очистка комнаты при разрыве
     pc.onconnectionstatechange = () => {
-      if (['disconnected', 'failed', 'closed'].includes(pc.connectionState)) {
+      if (["disconnected", "failed", "closed"].includes(pc.connectionState)) {
         db.ref('rooms/' + roomId).remove();
         setTimeout(() => location.reload(), 1000);
       }
@@ -260,7 +246,6 @@ async function connectToRoom(roomId, partnerUid) {
   }
 }
 
-// === Chat ===
 chatForm.onsubmit = e => {
   e.preventDefault();
   const msg = chatInput.value.trim();
@@ -283,9 +268,8 @@ function listenChat() {
     if (from !== currentUser.uid) addChatMsg(msg, false, name);
   });
 }
-setInterval(listenChat, 2000); // простая защита от двойного подключения
+setInterval(listenChat, 2000);
 
-// === Анимация появления сообщений ===
 const observer = new MutationObserver(mutations => {
   mutations.forEach(m => {
     if (m.addedNodes.length) {
@@ -299,7 +283,6 @@ const observer = new MutationObserver(mutations => {
 });
 observer.observe(chatMessages, { childList: true });
 
-// === Restore chat on reload ===
 window.onbeforeunload = () => {
   if (roomId) db.ref('rooms/' + roomId).remove();
   if (myQueueRef) myQueueRef.remove();
