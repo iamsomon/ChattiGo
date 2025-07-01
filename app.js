@@ -23,6 +23,8 @@ const stopBtn = document.getElementById('stopBtn');
 const nextBtn = document.getElementById('nextBtn');
 const chatBtn = document.getElementById('chatBtn');
 const chatPanel = document.getElementById('chatPanel');
+const chatOverlay = document.getElementById('chatOverlay');
+const chatCloseBtn = document.getElementById('chatCloseBtn');
 const typingIndicator = document.getElementById('typingIndicator');
 const chatMessages = document.getElementById('chatMessages');
 const chatForm = document.getElementById('chatForm');
@@ -58,6 +60,8 @@ let pc = null;
 let roomId = null;
 let micEnabled = true;
 let camEnabled = true;
+let audioTrack = null;
+let videoTrack = null;
 let isSearching = false;
 let myQueueRef = null;
 let lastPartnerUid = null; // Для исключения повторов
@@ -133,13 +137,14 @@ async function startLocalVideo() {
       localStream.getTracks().forEach(t => t.stop());
     }
     localStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: currentFacing } },
-      audio: true
+      video: camEnabled ? { facingMode: { ideal: currentFacing } } : false,
+      audio: micEnabled
     });
+    // Сохраняем ссылки на треки для управления
+    audioTrack = localStream.getAudioTracks()[0] || null;
+    videoTrack = localStream.getVideoTracks()[0] || null;
     localVideo.srcObject = localStream;
     localVideo.classList.remove('hidden');
-    micEnabled = true;
-    camEnabled = true;
     updateMicUI();
     updateCamUI();
   } catch (e) {
@@ -151,29 +156,34 @@ async function startLocalVideo() {
 function updateMicUI() {
   micBtn.setAttribute('aria-pressed', micEnabled);
   micBtn.style.opacity = micEnabled ? '1' : '0.5';
+  if (audioTrack) audioTrack.enabled = micEnabled;
 }
 function updateCamUI() {
   camBtn.setAttribute('aria-pressed', camEnabled);
   camBtn.style.opacity = camEnabled ? '1' : '0.5';
   localVideo.style.opacity = camEnabled ? '0.85' : '0.2';
-  if (localStream) localStream.getVideoTracks().forEach(t => t.enabled = camEnabled);
+  if (videoTrack) videoTrack.enabled = camEnabled;
 }
 
-micBtn.onclick = () => {
-  if (!localStream) {
-    alert('Камера/микрофон не инициализированы!');
-    return;
-  }
+micBtn.onclick = async () => {
   micEnabled = !micEnabled;
-  localStream.getAudioTracks().forEach(t => t.enabled = micEnabled);
+  if (audioTrack) {
+    audioTrack.enabled = micEnabled;
+    if (!micEnabled) audioTrack.stop();
+  } else if (micEnabled) {
+    await startLocalVideo();
+  }
   updateMicUI();
 };
-camBtn.onclick = () => {
-  if (!localStream) {
-    alert('Камера/микрофон не инициализированы!');
-    return;
-  }
+camBtn.onclick = async () => {
   camEnabled = !camEnabled;
+  if (videoTrack) {
+    videoTrack.enabled = camEnabled;
+    if (!camEnabled) videoTrack.stop();
+  }
+  if (camEnabled && !videoTrack) {
+    await startLocalVideo();
+  }
   updateCamUI();
 };
 
@@ -183,15 +193,47 @@ stopBtn.onclick = () => {
 nextBtn.onclick = () => {
   endCall(true);
 };
+
+// Открытие чата
 chatBtn.onclick = () => {
   if (!chatPanel) return;
-  chatPanel.classList.toggle('open');
-  if (chatPanel.classList.contains('open')) {
-    setTimeout(() => {
-      chatInput && chatInput.focus();
-    }, 120);
-  }
+  chatPanel.classList.add('open');
+  setTimeout(() => {
+    chatInput && chatInput.focus();
+  }, 120);
 };
+
+// Закрытие чата по overlay или X
+function closeChatPanel() {
+  chatPanel.classList.remove('open');
+}
+if (chatOverlay) {
+  chatOverlay.onclick = closeChatPanel;
+}
+if (chatCloseBtn) {
+  chatCloseBtn.onclick = closeChatPanel;
+}
+
+// Закрытие свайпом вниз (только мобильные)
+let touchStartY = null;
+if (window.matchMedia('(max-width: 600px)').matches && chatPanel) {
+  const content = document.querySelector('.chat-panel-content');
+  if (content) {
+    content.addEventListener('touchstart', e => {
+      if (e.touches.length === 1) touchStartY = e.touches[0].clientY;
+    });
+    content.addEventListener('touchmove', e => {
+      if (touchStartY !== null && e.touches.length === 1) {
+        const deltaY = e.touches[0].clientY - touchStartY;
+        if (deltaY > 60) {
+          closeChatPanel();
+          touchStartY = null;
+        }
+      }
+    });
+    content.addEventListener('touchend', () => { touchStartY = null; });
+  }
+}
 
 // === Темы ===
 const themeBtn = document.getElementById('themeBtn');
