@@ -31,6 +31,25 @@ const authModal = document.getElementById('authModal');
 const searchModal = document.getElementById('searchModal');
 const onlineCountEl = document.getElementById('onlineCount');
 const onlineDotEl = document.getElementById('onlineDot');
+const splitBtn = document.getElementById('splitBtn');
+const switchCamBtn = document.getElementById('switchCamBtn');
+// === Split режим ===
+let splitMode = false;
+if (splitBtn) {
+  splitBtn.onclick = () => {
+    splitMode = !splitMode;
+    document.body.classList.toggle('split-mode', splitMode);
+  };
+}
+
+// === Смена камеры ===
+let currentFacing = 'user';
+if (switchCamBtn) {
+  switchCamBtn.onclick = async () => {
+    currentFacing = currentFacing === 'user' ? 'environment' : 'user';
+    await startLocalVideo();
+  };
+}
 
 let currentUser = null;
 let localStream = null;
@@ -110,7 +129,13 @@ async function startLocalVideo() {
       alert('Ваш браузер не поддерживает getUserMedia.');
       return;
     }
-    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    if (localStream) {
+      localStream.getTracks().forEach(t => t.stop());
+    }
+    localStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: currentFacing } },
+      audio: true
+    });
     localVideo.srcObject = localStream;
     localVideo.classList.remove('hidden');
     micEnabled = true;

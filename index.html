@@ -1,3 +1,9 @@
+      <button id="splitBtn" class="control-btn" title="Сплит-режим" style="margin-left:8px;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="18" rx="2" stroke="currentColor" stroke-width="2"/><rect x="13" y="3" width="8" height="18" rx="2" stroke="currentColor" stroke-width="2"/></svg>
+      </button>
+      <button id="switchCamBtn" class="control-btn" title="Сменить камеру">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M17 1l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11V9a4 4 0 0 1 4-4h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 23l-4-4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 13v2a4 4 0 0 1-4 4H3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -57,25 +63,27 @@
     </div>
   </div>
   <div id="authModal" class="modal hidden">
-    <div class="modal-content">
-      <h2>Войти в ChattiGo</h2>
-      <form id="authForm">
-        <input id="authEmail" type="email" placeholder="Email" required>
-        <input id="authPass" type="password" placeholder="Пароль" required>
-        <button type="submit" class="btn primary">Войти</button>
-        <button type="button" id="regBtn" class="btn secondary">Регистрация</button>
-        <button type="button" id="anonBtn" class="btn secondary">Анонимно</button>
-        <button type="button" id="googleBtn" class="btn google">Google</button>
+    <div class="auth-modal-content">
+      <h2 class="auth-title">ChattiGo</h2>
+      <form id="authForm" class="auth-form">
+        <input id="authEmail" type="email" placeholder="Email" required autocomplete="username">
+        <input id="authPass" type="password" placeholder="Пароль" required autocomplete="current-password">
+        <div class="auth-btns">
+          <button type="submit" class="btn primary">Войти</button>
+          <button type="button" id="regBtn" class="btn secondary">Регистрация</button>
+        </div>
+        <div class="auth-btns">
+          <button type="button" id="anonBtn" class="btn secondary">Анонимно</button>
+          <button type="button" id="googleBtn" class="btn google">Google</button>
+        </div>
       </form>
     </div>
   </div>
-  <div id="searchModal" class="modal hidden">
-    <div class="modal-content">
-      <div class="search-animation">
-        <div class="search-spinner"></div>
-        <h3>Поиск собеседника...</h3>
-        <button id="cancelSearch" class="btn secondary">Отменить</button>
-      </div>
+  <div id="searchModal" class="search-modal hidden">
+    <div class="search-box">
+      <div class="search-spinner"></div>
+      <div class="search-text">Поиск собеседника...</div>
+      <button id="cancelSearch" class="btn secondary">Отменить</button>
     </div>
   </div>
   <!-- Firebase SDK -->
