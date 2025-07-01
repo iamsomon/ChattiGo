@@ -80,16 +80,31 @@ body, html {
 }
 
 .call-controls {
-  position: absolute;
-  left: 50%;
-  bottom: 40px;
-  transform: translateX(-50%);
   display: flex;
-  gap: 32px;
-  background: none;
+  justify-content: center;
+  gap: 18px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: env(safe-area-inset-bottom, 0px);
+  z-index: 100;
+  background: rgba(24,24,24,0.98);
+  padding: 0.5em 0 0.9em 0;
+  box-shadow: 0 -2px 16px 0 rgba(0,0,0,0.12);
   border-radius: 0;
-  box-shadow: none;
-  z-index: 10;
+}
+
+@media (max-width: 600px) {
+  .call-controls {
+    gap: 8px;
+    padding-bottom: 1.2em;
+    background: rgba(24,24,24,0.98);
+  }
+  .control-btn {
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 1.2em;
+  }
 }
 
 .control-btn {
@@ -106,6 +121,7 @@ body, html {
   cursor: pointer;
   transition: background 0.2s, color 0.2s, opacity 0.2s;
   opacity: 1;
+  touch-action: manipulation;
 }
 
 .control-btn:active {

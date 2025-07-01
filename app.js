@@ -41,6 +41,7 @@ let micEnabled = true;
 let camEnabled = true;
 let isSearching = false;
 let myQueueRef = null;
+let lastPartnerUid = null; // Для исключения повторов
 
 // === Онлайн-статус пользователя ===
 function setOnlineStatus(isOnline) {
@@ -186,7 +187,7 @@ function startSearching() {
   searchModal.classList.remove('hidden');
   const queueRef = db.ref('queue');
   // Добавляем себя в очередь с уникальным ключом
-  myQueueRef = queueRef.push({ uid: currentUser.uid, ts: Date.now(), looking: true });
+  myQueueRef = queueRef.push({ uid: currentUser.uid, ts: Date.now(), looking: true, last: lastPartnerUid || null });
   myQueueRef.onDisconnect().remove();
 
   // Слушаем только свой элемент на предмет match
@@ -219,7 +220,14 @@ async function tryMatch() {
   let found = null;
   snap.forEach(child => {
     const v = child.val();
-    if (child.key !== myKey && v.looking && !v.match) {
+    // Исключаем себя и последнего собеседника (чтобы не повторяться подряд)
+    if (
+      child.key !== myKey &&
+      v.looking &&
+      !v.match &&
+      v.uid !== lastPartnerUid &&
+      v.last !== currentUser.uid // и он не только что был с нами
+    ) {
       found = { uid: v.uid, key: child.key };
       return true; // break
     }
@@ -240,6 +248,7 @@ async function tryMatch() {
 async function connectWith(partnerUid, partnerKey, isPassive = false) {
   searchModal.classList.add('hidden');
   isSearching = false;
+  lastPartnerUid = partnerUid; // Запоминаем, чтобы не повторяться
   // Удаляем себя и собеседника из очереди (только если мы инициатор)
   if (myQueueRef) myQueueRef.off();
   if (!isPassive) {
@@ -287,6 +296,12 @@ async function setupPeerConnection() {
       snap.forEach(c => { pc.addIceCandidate(new RTCIceCandidate(c.val())).catch(()=>{}); });
     }
   });
+  // Если собеседник вышел/нажал next/stop — комната удаляется, ловим это и сразу ищем нового
+  roomRef.on('value', snap => {
+    if (!snap.exists() && roomId) {
+      endCall(true); // Автоматически ищем нового
+    }
+  });
   pc.onconnectionstatechange = () => {
     if (["disconnected","failed","closed"].includes(pc.connectionState)) endCall();
   };
@@ -294,7 +309,11 @@ async function setupPeerConnection() {
 
 function endCall(findNext) {
   if (pc) { pc.close(); pc = null; }
-  if (roomId) { db.ref('rooms/' + roomId).remove(); roomId = null; }
+  if (roomId) {
+    db.ref('rooms/' + roomId).off();
+    db.ref('rooms/' + roomId).remove();
+    roomId = null;
+  }
   if (myQueueRef) { myQueueRef.remove(); myQueueRef = null; }
   remoteVideo.srcObject = null;
   if (findNext) setTimeout(() => startSearching(), 200);
