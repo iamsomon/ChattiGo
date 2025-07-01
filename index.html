@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <title>ChattiGo</title>
+</head>
+<body>
+  <div class="app-container">
+    <div class="video-container">
+      <video id="remoteVideo" class="remote-video" autoplay playsinline></video>
+      <video id="localVideo" class="local-video" autoplay muted playsinline></video>
+      <div class="call-controls">
+        <button id="micBtn" class="control-btn" aria-pressed="true" title="Микрофон">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Zm5 9a5 5 0 0 1-10 0M19 11v1a7 7 0 0 1-14 0v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="camBtn" class="control-btn" aria-pressed="true" title="Камера">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="15" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M21 7v10" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+        <button id="stopBtn" class="control-btn danger" title="Стоп">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>
+        </button>
+        <button id="nextBtn" class="control-btn" title="Следующий">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="chatBtn" class="control-btn" title="Чат">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="chat-panel" id="chatPanel">
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-container">
+        <form class="chat-form" id="chatForm">
+          <input type="text" id="chatInput" class="chat-input" placeholder="Введите сообщение...">
+          <button type="submit" class="send-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M22 2 11 13" stroke="currentColor" stroke-width="2"/><path d="M22 2 15 22l-4-9-9-4 20-7Z" stroke="currentColor" stroke-width="2"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div id="authModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Войти в ChattiGo</h2>
+      <form id="authForm">
+        <input id="authEmail" type="email" placeholder="Email" required>
+        <input id="authPass" type="password" placeholder="Пароль" required>
+        <button type="submit" class="btn primary">Войти</button>
+        <button type="button" id="regBtn" class="btn secondary">Регистрация</button>
+        <button type="button" id="anonBtn" class="btn secondary">Анонимно</button>
+        <button type="button" id="googleBtn" class="btn google">Google</button>
+      </form>
+    </div>
+  </div>
+  <div id="searchModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="search-animation">
+        <div class="search-spinner"></div>
+        <h3>Поиск собеседника...</h3>
+        <button id="cancelSearch" class="btn secondary">Отменить</button>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,12 @@
+{
+  "name": "chattigo",
+  "version": "1.0.0",
+  "description": "Минималистичная чат-рулетка на чистом HTML/CSS/JS для GitHub Pages",
+  "scripts": {
+    "deploy": "gh-pages -d ."
+  },
+  "homepage": "https://iamsomon.github.io/ChattiGo/",
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}
