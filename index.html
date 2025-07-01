@@ -8,6 +8,19 @@
   <title>ChattiGo</title>
 </head>
 <body>
+  <header style="padding:0.5em 0 0.5em 0.5em;display:flex;align-items:center;gap:10px;">
+    <h1 style="font-size:1.5em;font-weight:700;margin:0;display:flex;align-items:center;gap:8px;">
+      ChattiGo
+      <span id="onlineDot" class="online-dot offline"></span>
+      <span id="onlineCount">0</span>
+    </h1>
+    <button id="themeBtn" title="Сменить тему" style="margin-left:16px;background:none;border:none;cursor:pointer;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 2a10 10 0 0 0 0 20" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
+    <button id="logoutBtn" title="Выйти" style="margin-left:8px;background:none;border:none;cursor:pointer;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M16 17l5-5-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 4v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </header>
   <div class="app-container">
     <div class="video-container">
       <video id="remoteVideo" class="remote-video" autoplay playsinline></video>
@@ -32,6 +45,7 @@
     </div>
     <div class="chat-panel" id="chatPanel">
       <div class="chat-messages" id="chatMessages"></div>
+      <div id="typingIndicator" class="hidden" style="font-size:0.95em;color:#888;padding:2px 10px 2px 10px;">Собеседник печатает...</div>
       <div class="chat-input-container">
         <form class="chat-form" id="chatForm">
           <input type="text" id="chatInput" class="chat-input" placeholder="Введите сообщение...">
