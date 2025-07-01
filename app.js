@@ -1,3 +1,4 @@
+console.log('app.js loaded');
 // === Firebase config ===
 const firebaseConfig = {
   apiKey: "AIzaSyAun2CwLPEguSFdNbK3UJKzhBCYag8p08A",
