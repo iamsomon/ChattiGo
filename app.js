@@ -3,7 +3,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyAun2CwLPEguSFdNbK3UJKzhBCYag8p08A",
   authDomain: "chattigo-464317.firebaseapp.com",
   projectId: "chattigo-464317",
-  storageBucket: "chattigo-464317.firebasestorage.app",
+  storageBucket: "chattigo-464317.appspot.com",
   messagingSenderId: "462066177305",
   appId: "1:462066177305:web:ca0f2491365cebf6f9a188",
   measurementId: "G-6LH7TBYR05"
