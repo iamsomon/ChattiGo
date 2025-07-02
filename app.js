@@ -24,6 +24,18 @@ function setHeaderVisible(visible) {
   headerVisible = visible;
   document.body.classList.toggle('header-hidden', !visible);
   if (mainHeader) mainHeader.classList.toggle('header-hidden', !visible);
+  // Плавная анимация затемнения/осветления видео при скрытии header
+  const videos = document.querySelectorAll('.remote-video, .local-video');
+  videos.forEach(v => {
+    v.style.transition = 'box-shadow 0.32s cubic-bezier(0.4,0,0.2,1), filter 0.32s cubic-bezier(0.4,0,0.2,1)';
+    if (!visible) {
+      v.style.boxShadow = '0 0 0 4px #007aff44';
+      v.style.filter = 'brightness(1.08)';
+    } else {
+      v.style.boxShadow = '';
+      v.style.filter = '';
+    }
+  });
 }
 
 // На мобильных: по тапу на видео — скрыть/показать header
@@ -31,9 +43,11 @@ function setupHeaderHideOnTap() {
   if (window.matchMedia('(max-width: 600px)').matches) {
     const videoArea = document.querySelector('.video-container');
     if (videoArea) {
-      videoArea.addEventListener('click', () => {
+      // Снимаем предыдущий обработчик, если был
+      videoArea.onclick = null;
+      videoArea.onclick = () => {
         setHeaderVisible(!headerVisible);
-      });
+      };
     }
   }
 }
@@ -52,6 +66,15 @@ if (accountBtn && accountMenu) {
   accountBtn.onclick = (e) => {
     e.stopPropagation();
     accountMenu.classList.toggle('hidden');
+    // Анимация появления меню
+    if (!accountMenu.classList.contains('hidden')) {
+      accountMenu.style.transform = 'scale(1.04) translateY(-8px)';
+      accountMenu.style.opacity = '0.7';
+      setTimeout(() => {
+        accountMenu.style.transform = '';
+        accountMenu.style.opacity = '';
+      }, 120);
+    }
   };
   document.addEventListener('click', (e) => {
     if (!accountMenu.contains(e.target) && e.target !== accountBtn) {
@@ -62,10 +85,15 @@ if (accountBtn && accountMenu) {
 
 // Заполняем профиль в меню аккаунта
 function updateAccountMenu(user) {
-  if (!user) return;
   const nameEl = document.getElementById('accountName');
   const emailEl = document.getElementById('accountEmail');
   const avatarEl = document.getElementById('accountAvatar');
+  if (!user) {
+    nameEl && (nameEl.textContent = 'Гость');
+    emailEl && (emailEl.textContent = '');
+    if (avatarEl) avatarEl.src = 'https://i.pravatar.cc/64';
+    return;
+  }
   nameEl && (nameEl.textContent = user.displayName || 'Гость');
   emailEl && (emailEl.textContent = user.email || (user.isAnonymous ? 'Анонимно' : ''));
   if (avatarEl) {
