@@ -557,6 +557,50 @@ body, html {
   border-radius: 0 !important;
 }
 
+/* PIP-режим локального видео (маленькое окно в углу, если не split-mode) */
+body:not(.split-mode) .local-video {
+  position: absolute;
+  width: 220px;
+  height: 140px;
+  top: 24px;
+  right: 24px;
+  z-index: 2100;
+  border: none;
+  background: #222;
+  opacity: 0.92;
+  transition: opacity 0.2s, width 0.2s, height 0.2s;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
+  border-radius: 10px;
+  object-fit: cover;
+  pointer-events: auto;
+}
+
+@media (max-width: 900px) {
+  body:not(.split-mode) .local-video {
+    width: 130px;
+    height: 90px;
+    right: 8px;
+    top: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  body:not(.split-mode) .local-video {
+    width: 88px;
+    height: 62px;
+    right: 8px;
+    top: 8px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
+    z-index: 2100;
+    opacity: 0.96;
+    background: #222;
+    transition: opacity 0.2s, width 0.2s, height 0.2s;
+    pointer-events: auto;
+  }
+}
+}
+
 /* SPLIT MODE */
 body.split-mode .video-container {
   display: flex;
