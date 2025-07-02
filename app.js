@@ -156,13 +156,23 @@ async function startLocalVideo() {
       video: camEnabled ? { facingMode: { ideal: currentFacing } } : false,
       audio: micEnabled
     });
-    // Сохраняем ссылки на треки для управления
     audioTrack = localStream.getAudioTracks()[0] || null;
     videoTrack = localStream.getVideoTracks()[0] || null;
     localVideo.srcObject = localStream;
     localVideo.classList.remove('hidden');
     updateMicUI();
     updateCamUI();
+    // Если есть peerConnection — пересоздать видео-трек
+    if (pc && videoTrack) {
+      const senders = pc.getSenders();
+      const vSender = senders.find(s => s.track && s.track.kind === 'video');
+      if (vSender) vSender.replaceTrack(videoTrack);
+    }
+    if (pc && audioTrack) {
+      const senders = pc.getSenders();
+      const aSender = senders.find(s => s.track && s.track.kind === 'audio');
+      if (aSender) aSender.replaceTrack(audioTrack);
+    }
   } catch (e) {
     alert('Ошибка доступа к камере/микрофону: ' + e.message);
     console.error(e);
@@ -183,23 +193,12 @@ function updateCamUI() {
 
 micBtn.onclick = async () => {
   micEnabled = !micEnabled;
-  if (audioTrack) {
-    audioTrack.enabled = micEnabled;
-    if (!micEnabled) audioTrack.stop();
-  } else if (micEnabled) {
-    await startLocalVideo();
-  }
+  await startLocalVideo();
   updateMicUI();
 };
 camBtn.onclick = async () => {
   camEnabled = !camEnabled;
-  if (videoTrack) {
-    videoTrack.enabled = camEnabled;
-    if (!camEnabled) videoTrack.stop();
-  }
-  if (camEnabled && !videoTrack) {
-    await startLocalVideo();
-  }
+  await startLocalVideo();
   updateCamUI();
 };
 
@@ -269,6 +268,8 @@ function startSearching() {
   isSearching = true;
   if (searchingOverlay) searchingOverlay.classList.remove('hidden');
   if (remoteVideo) remoteVideo.classList.add('hidden');
+  // Очищаем чат при новом поиске
+  if (chatMessages) chatMessages.innerHTML = '';
   const queueRef = db.ref('queue');
   myQueueRef = queueRef.push({ uid: currentUser.uid, ts: Date.now(), looking: true, last: lastPartnerUid || null });
   myQueueRef.onDisconnect().remove();
@@ -391,6 +392,8 @@ function endCall(findNext) {
   remoteVideo.srcObject = null;
   if (searchingOverlay) searchingOverlay.classList.add('hidden');
   if (remoteVideo) remoteVideo.classList.remove('hidden');
+  // Очищаем чат при разрыве
+  if (chatMessages) chatMessages.innerHTML = '';
   if (findNext) setTimeout(() => startSearching(), 200);
 }
 
