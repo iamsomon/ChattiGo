@@ -547,6 +547,8 @@ body, html {
   height: 100vh;
 }
 
+
+/* --- Видео --- */
 .remote-video, .local-video {
   width: 100vw;
   height: 100vh;
@@ -555,40 +557,96 @@ body, html {
   border-radius: 0 !important;
 }
 
-
-/* PEEP-режим (маленькое локальное видео) — классика */
-
-/* PEEP/PIP-режим локального видео (маленькое, справа сверху) */
-.local-video {
-  position: absolute;
-  width: 220px;
-  height: 140px;
-  top: 24px;
-  right: 24px;
-  z-index: 2;
-  border: none;
-  background: #222;
-  opacity: 0.92;
-  transition: opacity 0.2s, width 0.2s, height 0.2s;
-  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
-  border-radius: 10px;
+/* SPLIT MODE */
+body.split-mode .video-container {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
 }
-
-
+body.split-mode .remote-video {
+  position: static;
+  width: 50vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 1;
+  border-radius: 0;
+}
+body.split-mode .local-video {
+  position: static;
+  width: 50vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 2;
+  border-radius: 0;
+  opacity: 0.98;
+  background: #181a1b;
+}
 @media (max-width: 900px) {
-  .local-video {
-    width: 130px;
-    height: 90px;
-    right: 8px;
-    top: 8px;
+  body.split-mode .video-container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw !important;
+    height: 100vh !important;
+    position: relative;
+    gap: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+  }
+  body.split-mode .remote-video-wrap,
+  body.split-mode .local-video {
+    width: 100vw !important;
+    height: 50vh !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: 100vw !important;
+    max-height: 50vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+  }
+  body.split-mode .remote-video {
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
+    border-bottom: 1.5px solid #232323;
+  }
+  body.split-mode .local-video {
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 -2px 12px 0 rgba(0,0,0,0.10);
+    border-top: none;
+  }
+  body.split-mode .remote-video-wrap {
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    background: #181a1b;
+  }
+  body.split-mode .remote-video {
+    width: 100vw !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    object-fit: cover;
+    background: #181a1b;
+  }
+  body.split-mode .local-video {
+    width: 100vw !important;
+    height: 50vh !important;
+    min-height: 0 !important;
+    max-height: 50vh !important;
+    object-fit: cover;
+    background: #181a1b;
+    position: static;
+    opacity: 0.98;
+    z-index: 2;
+    border-radius: 0;
   }
 }
 
-
 /* PIP-режим локального видео на мобильных (НЕ split-mode) */
-
 @media (max-width: 600px) {
-  /* Только для PIP-режима, не split-mode! */
   body:not(.split-mode) .local-video {
     position: absolute;
     width: 88px;
@@ -603,22 +661,19 @@ body, html {
     transition: opacity 0.2s, width 0.2s, height 0.2s;
     pointer-events: auto;
   }
-  /* Убираем лишний отступ между header и remote-video */
-  .app-container, .video-container, .remote-video {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-    top: 0 !important;
-  }
 }
 
 .local-video.hidden {
   display: none;
 }
 
+
+/* --- call-controls всегда поверх и кликабельны --- */
 .call-controls {
   display: flex;
   justify-content: center;
-  gap: 18px;
+  align-items: center;
+  gap: 16px;
   position: fixed;
   left: 0;
   right: 0;
@@ -630,14 +685,10 @@ body, html {
   border-radius: 0;
   pointer-events: auto;
 }
-
 @media (max-width: 600px) {
   .call-controls {
     gap: 8px;
     padding-bottom: 1.2em;
-    background: rgba(24,24,24,0.98);
-    z-index: 3000;
-    pointer-events: auto;
   }
   .control-btn {
     min-width: 44px;
@@ -968,8 +1019,4 @@ body, html {
 }
 
 
-@media (max-width: 600px) {
-  .local-video { width: 100px; height: 70px; top: 10px; right: 10px; }
-  .call-controls { gap: 12px; }
-  .control-btn { width: 44px; height: 44px; font-size: 18px; }
-}
+
