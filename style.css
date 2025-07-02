@@ -13,7 +13,7 @@
   top: 0; left: 0; right: 0;
   transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), box-shadow 0.18s;
   box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
-}
+/* удалён лишний закрывающий блок */
 .main-header.header-hidden {
   transform: translateY(-100%);
   box-shadow: none;
@@ -57,6 +57,7 @@
 .account-btn:active, .account-btn:focus {
   background: #232323;
 }
+/* Поверх всего, даже PIP/local-video */
 .account-menu {
   position: absolute;
   top: 56px;
@@ -69,7 +70,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1300;
+  z-index: 4000;
   opacity: 1;
   pointer-events: auto;
   transition: opacity 0.18s, transform 0.18s;
@@ -141,6 +142,7 @@
     min-width: 90vw;
     border-radius: 12px;
     padding: 14px 8px 10px 8px;
+    z-index: 4000;
   }
   .account-avatar {
     width: 54px; height: 54px;
@@ -209,13 +211,17 @@ body:not(.header-hidden) .remote-video, body:not(.header-hidden) .local-video {
   }
 }
 /* --- Поиск собеседника overlay --- */
+/* Без лишних отступов и background, чтобы не было полос */
 .remote-video-wrap {
   position: relative;
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: stretch;
+  background: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 .searching-overlay {
   position: absolute;
@@ -390,25 +396,12 @@ body.split-mode .local-video {
     margin: 0 !important;
     padding: 0 !important;
     box-sizing: border-box;
+    background: none !important;
   }
-  /* Визуальное разделение split-режима на мобильных */
   body.split-mode .remote-video {
     border-radius: 12px 12px 0 0;
     box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
     border-bottom: 1.5px solid #232323;
-  }
-  body.split-mode .local-video {
-    border-radius: 0 0 12px 12px;
-    box-shadow: 0 -2px 12px 0 rgba(0,0,0,0.10);
-    border-top: none;
-  }
-  body.split-mode .remote-video-wrap {
-    display: flex;
-    align-items: stretch;
-    justify-content: stretch;
-    background: #181a1b;
-  }
-  body.split-mode .remote-video {
     width: 100vw !important;
     height: 100% !important;
     min-height: 0 !important;
@@ -417,6 +410,9 @@ body.split-mode .local-video {
     background: #181a1b;
   }
   body.split-mode .local-video {
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 -2px 12px 0 rgba(0,0,0,0.10);
+    border-top: none;
     width: 100vw !important;
     height: 50vh !important;
     min-height: 0 !important;
@@ -426,21 +422,23 @@ body.split-mode .local-video {
     position: static;
     opacity: 0.98;
     z-index: 2;
-    border-radius: 0;
   }
 }
-/* --- call-controls поверх всего, без перекрытий --- */
+/* --- call-controls всегда поверх видео, но ниже chat-panel/account-menu --- */
 .call-controls {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2000;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 16px;
-  background: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: env(safe-area-inset-bottom, 0px);
+  z-index: 3000;
+  background: transparent;
+  padding: 0.5em 0 0.9em 0;
+  box-shadow: none;
+  border-radius: 0;
   pointer-events: auto;
 }
 
@@ -741,6 +739,7 @@ body.split-mode .local-video {
   }
 }
 
+/* Кнопки всегда кликабельны, визуальная обратная связь */
 .control-btn {
   width: 56px;
   height: 56px;
@@ -753,22 +752,31 @@ body.split-mode .local-video {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, opacity 0.2s;
+  transition: background 0.2s, color 0.2s, opacity 0.2s, box-shadow 0.18s;
   opacity: 1;
   touch-action: manipulation;
+  pointer-events: auto !important;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
 }
 
-.control-btn:active {
+/* Яркая обратная связь при нажатии */
+.control-btn:active, .control-btn:focus {
   background: #444;
+  outline: none;
+  box-shadow: 0 0 0 2px #007aff;
 }
 
+/* Красная кнопка "Стоп" */
 .control-btn.danger {
   background: #FF3B30;
   color: #fff;
+  box-shadow: 0 2px 8px 0 rgba(255,59,48,0.18);
 }
 
+/* Неактивные кнопки визуально полупрозрачны, но всегда pointer-events: auto */
 .control-btn[aria-pressed="false"] {
   opacity: 0.5;
+  pointer-events: auto !important;
 }
 
 /* Чат */
