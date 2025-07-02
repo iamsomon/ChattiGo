@@ -30,7 +30,9 @@ const chatMessages = document.getElementById('chatMessages');
 const chatForm = document.getElementById('chatForm');
 const chatInput = document.getElementById('chatInput');
 const authModal = document.getElementById('authModal');
-const searchModal = document.getElementById('searchModal');
+const searchingOverlay = document.getElementById('searchingOverlay');
+const moreMenuBtn = document.getElementById('moreMenuBtn');
+const moreMenu = document.getElementById('moreMenu');
 const onlineCountEl = document.getElementById('onlineCount');
 const onlineDotEl = document.getElementById('onlineDot');
 const splitBtn = document.getElementById('splitBtn');
@@ -41,6 +43,7 @@ if (splitBtn) {
   splitBtn.onclick = () => {
     splitMode = !splitMode;
     document.body.classList.toggle('split-mode', splitMode);
+    if (moreMenu) moreMenu.classList.add('hidden');
   };
 }
 
@@ -50,7 +53,20 @@ if (switchCamBtn) {
   switchCamBtn.onclick = async () => {
     currentFacing = currentFacing === 'user' ? 'environment' : 'user';
     await startLocalVideo();
+    if (moreMenu) moreMenu.classList.add('hidden');
   };
+}
+
+// === More menu (троеточие) ===
+if (moreMenuBtn && moreMenu) {
+  moreMenuBtn.onclick = () => {
+    moreMenu.classList.toggle('hidden');
+  };
+  document.addEventListener('click', e => {
+    if (!moreMenu.contains(e.target) && e.target !== moreMenuBtn) {
+      moreMenu.classList.add('hidden');
+    }
+  });
 }
 
 let currentUser = null;
@@ -246,36 +262,26 @@ if (themeBtn) {
   if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
 }
 
+
 // === Поиск собеседника ===
-// === Atomic Matching Queue ===
 function startSearching() {
   if (isSearching) return;
   isSearching = true;
-  searchModal.classList.remove('hidden');
+  if (searchingOverlay) searchingOverlay.classList.remove('hidden');
+  if (remoteVideo) remoteVideo.classList.add('hidden');
   const queueRef = db.ref('queue');
-  // Добавляем себя в очередь с уникальным ключом
   myQueueRef = queueRef.push({ uid: currentUser.uid, ts: Date.now(), looking: true, last: lastPartnerUid || null });
   myQueueRef.onDisconnect().remove();
 
-  // Слушаем только свой элемент на предмет match
   myQueueRef.on('value', async snap => {
     const val = snap.val();
-    if (!val) return; // удалён
+    if (!val) return;
     if (val.match && val.match.uid && val.match.key) {
-      // Нас выбрали, соединяемся
       connectWith(val.match.uid, val.match.key, true);
     }
   });
 
-  // Пытаемся найти другого ожидающего пользователя (атомарно)
   tryMatch();
-
-  document.getElementById('cancelSearch').onclick = () => {
-    isSearching = false;
-    if (myQueueRef) myQueueRef.remove();
-    searchModal.classList.add('hidden');
-    myQueueRef && myQueueRef.off();
-  };
 }
 
 async function tryMatch() {
@@ -313,10 +319,10 @@ async function tryMatch() {
 
 // isPassive = true, если нас выбрали, иначе false (мы инициатор)
 async function connectWith(partnerUid, partnerKey, isPassive = false) {
-  searchModal.classList.add('hidden');
+  if (searchingOverlay) searchingOverlay.classList.add('hidden');
+  if (remoteVideo) remoteVideo.classList.remove('hidden');
   isSearching = false;
-  lastPartnerUid = partnerUid; // Запоминаем, чтобы не повторяться
-  // Удаляем себя и собеседника из очереди (только если мы инициатор)
+  lastPartnerUid = partnerUid;
   if (myQueueRef) myQueueRef.off();
   if (!isPassive) {
     if (myQueueRef) myQueueRef.remove();
@@ -383,6 +389,8 @@ function endCall(findNext) {
   }
   if (myQueueRef) { myQueueRef.remove(); myQueueRef = null; }
   remoteVideo.srcObject = null;
+  if (searchingOverlay) searchingOverlay.classList.add('hidden');
+  if (remoteVideo) remoteVideo.classList.remove('hidden');
   if (findNext) setTimeout(() => startSearching(), 200);
 }
 
