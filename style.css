@@ -22,12 +22,12 @@
   display: flex;
   align-items: center;
   gap: 10px;
-}
+/* удалён лишний закрывающий блок */
 .site-icon {
   display: flex;
   align-items: center;
   margin-right: 2px;
-}
+/* удалён лишний закрывающий блок */
 .site-title {
   font-family: 'Space Grotesk', Arial, sans-serif;
   font-weight: 700;
@@ -554,9 +554,7 @@ body, html {
   background: #000 !important;
   border-radius: 0 !important;
 }
-
-/* PIP-режим локального видео (маленькое окно в углу, если не split-mode) */
-/* PIP-режим: строго фиксированные размеры, всегда поверх, фон тёмный */
+/* PIP-режим: строго фиксированные размеры, всегда поверх, фон тёмный, только один блок! */
 body:not(.split-mode) .local-video {
   position: absolute;
   width: 220px;
@@ -583,10 +581,10 @@ body:not(.split-mode) .local-video {
 }
 @media (max-width: 600px) {
   body:not(.split-mode) .local-video {
-    width: 88px;
-    height: 62px;
-    right: 8px;
-    top: 8px;
+    width: 72px;
+    height: 52px;
+    right: 6px;
+    top: 6px;
     border-radius: 10px;
     box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
     z-index: 2100;
@@ -596,29 +594,6 @@ body:not(.split-mode) .local-video {
     pointer-events: auto;
   }
 }
-
-@media (max-width: 900px) {
-  body:not(.split-mode) .local-video {
-    width: 130px;
-    height: 90px;
-    right: 8px;
-    top: 8px;
-  }
-}
-
-@media (max-width: 600px) {
-  body:not(.split-mode) .local-video {
-    width: 88px;
-    height: 62px;
-    right: 8px;
-    top: 8px;
-    border-radius: 10px;
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
-    z-index: 2100;
-    opacity: 0.96;
-    background: #222;
-    transition: opacity 0.2s, width 0.2s, height 0.2s;
-    pointer-events: auto;
   }
 }
 }
@@ -753,14 +728,23 @@ body.split-mode .local-video {
 }
 @media (max-width: 600px) {
   .call-controls {
-    gap: 8px;
+    gap: 12px;
     padding-bottom: 1.2em;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    justify-content: center;
+    align-items: center;
   }
   .control-btn {
+    width: 44px;
+    height: 44px;
     min-width: 44px;
     min-height: 44px;
-    font-size: 1.2em;
+    font-size: 1.3em;
+    border-radius: 50%;
     pointer-events: auto;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.13);
   }
 }
 
