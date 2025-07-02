@@ -339,6 +339,8 @@ body {
 .modal:not(.hidden), .search-modal:not(.hidden) {
   opacity: 1;
   pointer-events: all;
+  transform: scale(1);
+}
 /* SPLIT MODE */
 body.split-mode .video-container {
   display: flex;
