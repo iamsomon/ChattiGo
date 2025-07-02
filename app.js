@@ -114,6 +114,23 @@ const typingIndicator = document.getElementById('typingIndicator');
 const chatMessages = document.getElementById('chatMessages');
 const chatForm = document.getElementById('chatForm');
 const chatInput = document.getElementById('chatInput');
+// Управление видимостью кнопки чата
+function updateChatBtnVisibility() {
+  if (!chatBtn) return;
+  if (roomId) {
+    chatBtn.style.display = '';
+  } else {
+    chatBtn.style.display = 'none';
+    if (chatPanel) chatPanel.classList.remove('open');
+  }
+}
+
+// Управление доступностью кнопок управления
+function setControlsEnabled(enabled) {
+  [stopBtn, nextBtn, moreMenuBtn, chatBtn].forEach(btn => {
+    if (btn) btn.disabled = !enabled;
+  });
+}
 const authModal = document.getElementById('authModal');
 const searchingOverlay = document.getElementById('searchingOverlay');
 const moreMenuBtn = document.getElementById('moreMenuBtn');
@@ -236,6 +253,18 @@ async function startLocalVideo() {
       alert('Ваш браузер не поддерживает getUserMedia.');
       return;
     }
+    if (!camEnabled && !micEnabled) {
+      // Оба выключены — не запрашиваем getUserMedia, скрываем видео
+      if (localStream) {
+        localStream.getTracks().forEach(t => t.stop());
+        localStream = null;
+      }
+      localVideo.srcObject = null;
+      localVideo.classList.add('hidden');
+      updateMicUI();
+      updateCamUI();
+      return;
+    }
     if (localStream) {
       localStream.getTracks().forEach(t => t.stop());
     }
@@ -290,15 +319,17 @@ camBtn.onclick = async () => {
 };
 
 stopBtn.onclick = () => {
+  if (!roomId) return;
   endCall();
 };
 nextBtn.onclick = () => {
+  if (!roomId) return;
   endCall(true);
 };
 
 // Открытие чата
 chatBtn.onclick = () => {
-  if (!chatPanel) return;
+  if (!chatPanel || !roomId) return;
   chatPanel.classList.add('open');
   setTimeout(() => {
     chatInput && chatInput.focus();
@@ -357,6 +388,9 @@ function startSearching() {
   if (remoteVideo) remoteVideo.classList.add('hidden');
   // Очищаем чат при новом поиске
   if (chatMessages) chatMessages.innerHTML = '';
+  roomId = null;
+  updateChatBtnVisibility();
+  setControlsEnabled(false);
   const queueRef = db.ref('queue');
   myQueueRef = queueRef.push({ uid: currentUser.uid, ts: Date.now(), looking: true, last: lastPartnerUid || null });
   myQueueRef.onDisconnect().remove();
@@ -421,6 +455,12 @@ async function connectWith(partnerUid, partnerKey, isPassive = false) {
   roomId = [currentUser.uid, partnerUid].sort().join('_');
   await setupPeerConnection();
   listenToChat();
+  updateChatBtnVisibility();
+  // Открываем чат автоматически при подключении
+  if (chatPanel) chatPanel.classList.add('open');
+  setTimeout(() => { chatInput && chatInput.focus(); }, 120);
+  // Активируем кнопки управления
+  setControlsEnabled(true);
 }
 
 async function setupPeerConnection() {
@@ -477,10 +517,13 @@ function endCall(findNext) {
   }
   if (myQueueRef) { myQueueRef.remove(); myQueueRef = null; }
   remoteVideo.srcObject = null;
+  if (chatMessages) chatMessages.innerHTML = '';
+  if (chatPanel) chatPanel.classList.remove('open');
+  setTyping(false);
+  setControlsEnabled(false);
+  updateChatBtnVisibility();
   if (searchingOverlay) searchingOverlay.classList.add('hidden');
   if (remoteVideo) remoteVideo.classList.remove('hidden');
-  // Очищаем чат при разрыве
-  if (chatMessages) chatMessages.innerHTML = '';
   if (findNext) setTimeout(() => startSearching(), 200);
 }
 
@@ -488,7 +531,7 @@ function endCall(findNext) {
 chatForm.onsubmit = e => {
   e.preventDefault();
   const msg = chatInput.value.trim();
-  if (!msg || !roomId) return;
+  if (!msg || !roomId || !currentUser) return;
   db.ref('rooms/' + roomId + '/messages').push({ text: msg, sender: currentUser.uid, ts: Date.now() });
   chatInput.value = '';
   setTyping(false);
