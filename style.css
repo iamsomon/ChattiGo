@@ -597,10 +597,17 @@ body, html {
     top: 8px;
     border-radius: 10px;
     box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
-    z-index: 2;
+    z-index: 2100;
     opacity: 0.96;
     background: #222;
     transition: opacity 0.2s, width 0.2s, height 0.2s;
+    pointer-events: auto;
+  }
+  /* Убираем лишний отступ между header и remote-video */
+  .app-container, .video-container, .remote-video {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    top: 0 !important;
   }
 }
 
@@ -616,11 +623,12 @@ body, html {
   left: 0;
   right: 0;
   bottom: env(safe-area-inset-bottom, 0px);
-  z-index: 100;
+  z-index: 3000;
   background: rgba(24,24,24,0.98);
   padding: 0.5em 0 0.9em 0;
   box-shadow: 0 -2px 16px 0 rgba(0,0,0,0.12);
   border-radius: 0;
+  pointer-events: auto;
 }
 
 @media (max-width: 600px) {
@@ -628,11 +636,14 @@ body, html {
     gap: 8px;
     padding-bottom: 1.2em;
     background: rgba(24,24,24,0.98);
+    z-index: 3000;
+    pointer-events: auto;
   }
   .control-btn {
     min-width: 44px;
     min-height: 44px;
     font-size: 1.2em;
+    pointer-events: auto;
   }
 }
 
