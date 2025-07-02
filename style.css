@@ -1,3 +1,90 @@
+/* --- Поиск собеседника overlay --- */
+.remote-video-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.searching-overlay {
+  position: absolute;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(24,26,27,0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: opacity 0.25s;
+  opacity: 1;
+  pointer-events: auto;
+}
+.searching-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.search-spinner {
+  width: 38px;
+  height: 38px;
+  border: 4px solid #444;
+  border-top: 4px solid #007aff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 18px;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.search-text {
+  color: #fff;
+  font-size: 1.18em;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+
+/* --- More menu (троеточие) --- */
+.more-menu-wrap {
+  position: relative;
+  display: inline-block;
+}
+.more-menu {
+  position: absolute;
+  left: 0;
+  bottom: 48px;
+  background: #232323;
+  border-radius: 10px;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 6px;
+  z-index: 100;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(8px) scale(1);
+  transition: opacity 0.18s, transform 0.18s;
+}
+.more-menu.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(16px) scale(0.98);
+}
+.more-menu .control-btn {
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  background: none;
+  border: none;
+  color: #fff;
+  opacity: 0.85;
+  transition: opacity 0.18s;
+}
+.more-menu .control-btn:active, .more-menu .control-btn:hover {
+  opacity: 1;
+}
 html, body {
   overscroll-behavior: none;
   -webkit-user-select: none;
