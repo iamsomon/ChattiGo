@@ -156,6 +156,28 @@ body.header-hidden .app-container {
 body:not(.header-hidden) .app-container {
   padding-top: 56px;
 }
+
+/* Убираем лишние пробелы/отступы под и над header/app-container на десктопе */
+.app-container {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
+@media (min-width: 601px) {
+  body, html {
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: 100vh;
+    height: 100vh;
+    box-sizing: border-box;
+  }
+  .main-header {
+    margin-bottom: 0 !important;
+    box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
+  }
+}
 @media (max-width: 600px) {
   body:not(.header-hidden) .app-container {
     padding-top: 48px;
@@ -513,10 +535,12 @@ body, html {
   border-radius: 0 !important;
 }
 
+
+/* PEEP-режим (маленькое локальное видео) — классика */
 .local-video {
   position: absolute;
-  width: 260px;
-  height: 180px;
+  width: 220px;
+  height: 140px;
   top: 24px;
   right: 24px;
   z-index: 2;
@@ -524,6 +548,27 @@ body, html {
   background: #222;
   opacity: 0.92;
   transition: opacity 0.2s, width 0.2s, height 0.2s;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
+}
+
+@media (max-width: 900px) {
+  .local-video {
+    width: 130px;
+    height: 90px;
+    right: 8px;
+    top: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .local-video {
+    width: 90px;
+    height: 64px;
+    right: 6px;
+    top: 6px;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
+  }
 }
 
 @media (max-width: 900px) {
