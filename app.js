@@ -222,7 +222,7 @@ auth.onAuthStateChanged(async user => {
   authModal.classList.add('hidden');
   updateAccountMenu(user);
   await startLocalVideo();
-  startSearching();
+  // startSearching(); // Автоматический поиск отключён
   chatPanel.classList.remove('open'); // Чат скрыт по умолчанию
   listenOnlineCount();
 });
