@@ -117,13 +117,10 @@ const chatInput = document.getElementById('chatInput');
 // Управление видимостью кнопки чата
 function updateChatBtnVisibility() {
   if (!chatBtn) return;
-  // Кнопка чата доступна только если есть активная комната (roomId)
   if (roomId) {
     chatBtn.style.display = '';
-    chatBtn.disabled = false;
   } else {
     chatBtn.style.display = 'none';
-    chatBtn.disabled = true;
     if (chatPanel) chatPanel.classList.remove('open');
   }
 }
@@ -225,7 +222,7 @@ auth.onAuthStateChanged(async user => {
   authModal.classList.add('hidden');
   updateAccountMenu(user);
   await startLocalVideo();
-  // startSearching(); // Автоматический поиск отключён
+  startSearching();
   chatPanel.classList.remove('open'); // Чат скрыт по умолчанию
   listenOnlineCount();
 });
@@ -322,14 +319,12 @@ camBtn.onclick = async () => {
 };
 
 stopBtn.onclick = () => {
-  // Завершить текущий чат и просто сбросить состояние (без автопоиска)
+  if (!roomId) return;
   endCall();
 };
 nextBtn.onclick = () => {
-  // Завершить текущий чат и сразу начать поиск нового
+  if (!roomId) return;
   endCall(true);
-  // Если не было комнаты — всё равно начать поиск нового
-  if (!isSearching) startSearching();
 };
 
 // Открытие чата

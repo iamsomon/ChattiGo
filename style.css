@@ -557,50 +557,6 @@ body, html {
   border-radius: 0 !important;
 }
 
-/* PIP-режим локального видео (маленькое окно в углу, если не split-mode) */
-body:not(.split-mode) .local-video {
-  position: absolute;
-  width: 220px;
-  height: 140px;
-  top: 24px;
-  right: 24px;
-  z-index: 2100;
-  border: none;
-  background: #222;
-  opacity: 0.92;
-  transition: opacity 0.2s, width 0.2s, height 0.2s;
-  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
-  border-radius: 10px;
-  object-fit: cover;
-  pointer-events: auto;
-}
-
-@media (max-width: 900px) {
-  body:not(.split-mode) .local-video {
-    width: 130px;
-    height: 90px;
-    right: 8px;
-    top: 8px;
-  }
-}
-
-@media (max-width: 600px) {
-  body:not(.split-mode) .local-video {
-    width: 88px;
-    height: 62px;
-    right: 8px;
-    top: 8px;
-    border-radius: 10px;
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
-    z-index: 2100;
-    opacity: 0.96;
-    background: #222;
-    transition: opacity 0.2s, width 0.2s, height 0.2s;
-    pointer-events: auto;
-  }
-}
-}
-
 /* SPLIT MODE */
 body.split-mode .video-container {
   display: flex;
@@ -723,9 +679,9 @@ body.split-mode .local-video {
   right: 0;
   bottom: env(safe-area-inset-bottom, 0px);
   z-index: 3000;
-  background: transparent;
+  background: rgba(24,24,24,0.98);
   padding: 0.5em 0 0.9em 0;
-  box-shadow: none;
+  box-shadow: 0 -2px 16px 0 rgba(0,0,0,0.12);
   border-radius: 0;
   pointer-events: auto;
 }
@@ -782,7 +738,7 @@ body.split-mode .local-video {
   width: 400px;
   height: 100vh;
   background: transparent;
-  z-index: 3200;
+  z-index: 1200;
   pointer-events: none;
   display: flex;
   align-items: flex-end;
@@ -798,7 +754,7 @@ body.split-mode .local-video {
   position: fixed;
   left: 0; right: 0; top: 0; bottom: 0;
   background: rgba(0,0,0,0.38);
-  z-index: 3201;
+  z-index: 1201;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s cubic-bezier(0.4,0,0.2,1);
@@ -819,7 +775,7 @@ body.split-mode .local-video {
   box-shadow: -2px 0 24px 0 rgba(0,0,0,0.18);
   display: flex;
   flex-direction: column;
-  z-index: 3202;
+  z-index: 1202;
   transform: translateX(100%);
   transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
 }
@@ -853,13 +809,12 @@ body.split-mode .local-video {
     top: 0;
     left: 0;
     bottom: 0;
-    z-index: 3200;
   }
   .chat-panel-overlay {
     position: fixed;
     left: 0; right: 0; top: 0; bottom: 0;
     background: rgba(0,0,0,0.38);
-    z-index: 3201;
+    z-index: 1201;
   }
   .chat-panel-content {
     width: 100vw;
@@ -877,7 +832,7 @@ body.split-mode .local-video {
     transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
     display: flex;
     flex-direction: column;
-    z-index: 3202;
+    z-index: 1202;
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .chat-panel.open .chat-panel-content {
