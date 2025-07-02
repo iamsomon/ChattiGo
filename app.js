@@ -117,10 +117,13 @@ const chatInput = document.getElementById('chatInput');
 // Управление видимостью кнопки чата
 function updateChatBtnVisibility() {
   if (!chatBtn) return;
+  // Кнопка чата доступна только если есть активная комната (roomId)
   if (roomId) {
     chatBtn.style.display = '';
+    chatBtn.disabled = false;
   } else {
     chatBtn.style.display = 'none';
+    chatBtn.disabled = true;
     if (chatPanel) chatPanel.classList.remove('open');
   }
 }

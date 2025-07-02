@@ -723,9 +723,9 @@ body.split-mode .local-video {
   right: 0;
   bottom: env(safe-area-inset-bottom, 0px);
   z-index: 3000;
-  background: rgba(24,24,24,0.98);
+  background: transparent;
   padding: 0.5em 0 0.9em 0;
-  box-shadow: 0 -2px 16px 0 rgba(0,0,0,0.12);
+  box-shadow: none;
   border-radius: 0;
   pointer-events: auto;
 }
@@ -782,7 +782,7 @@ body.split-mode .local-video {
   width: 400px;
   height: 100vh;
   background: transparent;
-  z-index: 1200;
+  z-index: 3200;
   pointer-events: none;
   display: flex;
   align-items: flex-end;
@@ -798,7 +798,7 @@ body.split-mode .local-video {
   position: fixed;
   left: 0; right: 0; top: 0; bottom: 0;
   background: rgba(0,0,0,0.38);
-  z-index: 1201;
+  z-index: 3201;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s cubic-bezier(0.4,0,0.2,1);
@@ -819,7 +819,7 @@ body.split-mode .local-video {
   box-shadow: -2px 0 24px 0 rgba(0,0,0,0.18);
   display: flex;
   flex-direction: column;
-  z-index: 1202;
+  z-index: 3202;
   transform: translateX(100%);
   transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
 }
@@ -853,12 +853,13 @@ body.split-mode .local-video {
     top: 0;
     left: 0;
     bottom: 0;
+    z-index: 3200;
   }
   .chat-panel-overlay {
     position: fixed;
     left: 0; right: 0; top: 0; bottom: 0;
     background: rgba(0,0,0,0.38);
-    z-index: 1201;
+    z-index: 3201;
   }
   .chat-panel-content {
     width: 100vw;
@@ -876,7 +877,7 @@ body.split-mode .local-video {
     transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
     display: flex;
     flex-direction: column;
-    z-index: 1202;
+    z-index: 3202;
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .chat-panel.open .chat-panel-content {
