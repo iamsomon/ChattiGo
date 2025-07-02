@@ -319,12 +319,16 @@ camBtn.onclick = async () => {
 };
 
 stopBtn.onclick = () => {
-  if (!roomId) return;
+  // Завершить текущий чат и вернуться к поиску
   endCall();
+  // Если не было комнаты — всё равно показать поиск
+  if (!isSearching) startSearching();
 };
 nextBtn.onclick = () => {
-  if (!roomId) return;
+  // Завершить текущий чат и сразу начать поиск нового
   endCall(true);
+  // Если не было комнаты — всё равно начать поиск нового
+  if (!isSearching) startSearching();
 };
 
 // Открытие чата
