@@ -17,7 +17,7 @@
 .main-header.header-hidden {
   transform: translateY(-100%);
   box-shadow: none;
-}
+/* удалён лишний закрывающий блок */
 .header-left {
   display: flex;
   align-items: center;
@@ -740,11 +740,12 @@ body.split-mode .local-video {
 }
 
 /* Кнопки всегда кликабельны, визуальная обратная связь */
+/* Кнопки управления: современный вид, UX, анимация, доступность */
 .control-btn {
   width: 56px;
   height: 56px;
   border: none;
-  border-radius: 0;
+  border-radius: 50%;
   background: #232323;
   color: #fff;
   font-size: 24px;
@@ -752,11 +753,60 @@ body.split-mode .local-video {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, opacity 0.2s, box-shadow 0.18s;
+  transition: background 0.18s, color 0.18s, opacity 0.18s, box-shadow 0.18s, transform 0.12s;
   opacity: 1;
   touch-action: manipulation;
   pointer-events: auto !important;
-  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.13);
+  outline: none;
+  position: relative;
+  will-change: transform, box-shadow;
+  user-select: none;
+}
+.control-btn:active, .control-btn:focus {
+  background: #444;
+  outline: none;
+  box-shadow: 0 0 0 3px #007aff, 0 2px 16px 0 rgba(0,0,0,0.18);
+  transform: scale(0.96);
+}
+.control-btn:hover:not(:disabled):not([aria-pressed="false"]) {
+  background: #2d2d2d;
+  color: #fff;
+  box-shadow: 0 4px 18px 0 rgba(0,122,255,0.10);
+  opacity: 1;
+}
+.control-btn:disabled,
+.control-btn[aria-pressed="false"] {
+  opacity: 0.45 !important;
+  background: #232323 !important;
+  color: #aaa !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  pointer-events: auto !important;
+  filter: grayscale(0.25);
+}
+.control-btn svg {
+  width: 1.5em;
+  height: 1.5em;
+  display: block;
+}
+.control-btn.danger {
+  background: #FF3B30;
+  color: #fff;
+  box-shadow: 0 2px 12px 0 rgba(255,59,48,0.18);
+}
+.control-btn.danger:active, .control-btn.danger:focus {
+  background: #d32f2f;
+  box-shadow: 0 0 0 3px #ff3b30, 0 2px 16px 0 rgba(255,59,48,0.18);
+}
+.control-btn.danger:disabled,
+.control-btn.danger[aria-pressed="false"] {
+  background: #ffb3b3 !important;
+  color: #fff !important;
+  opacity: 0.45 !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+}
 }
 
 /* Яркая обратная связь при нажатии */
