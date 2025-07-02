@@ -12,22 +12,22 @@
   position: fixed;
   top: 0; left: 0; right: 0;
   transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), box-shadow 0.18s;
-  box-shadow: none !important;
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
 /* удалён лишний закрывающий блок */
 .main-header.header-hidden {
   transform: translateY(-100%);
-  box-shadow: none !important;
-/* удалён лишний закрывающий блок */
+  box-shadow: none;
+}
 .header-left {
   display: flex;
   align-items: center;
   gap: 10px;
-/* удалён лишний закрывающий блок */
+}
 .site-icon {
   display: flex;
   align-items: center;
   margin-right: 2px;
-/* удалён лишний закрывающий блок */
+}
 .site-title {
   font-family: 'Space Grotesk', Arial, sans-serif;
   font-weight: 700;
@@ -49,7 +49,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  border-radius: 0 !important;
+  border-radius: 50%;
   width: 40px;
   height: 40px;
   transition: background 0.18s;
@@ -64,8 +64,8 @@
   right: 10px;
   min-width: 220px;
   background: #232323;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18);
   padding: 18px 18px 12px 18px;
   display: flex;
   flex-direction: column;
@@ -84,7 +84,7 @@
 .account-avatar {
   width: 64px;
   height: 64px;
-  border-radius: 0 !important;
+  border-radius: 50%;
   overflow: hidden;
   margin-bottom: 10px;
   background: #181a1b;
@@ -113,7 +113,7 @@
   background: #181a1b;
   color: #fff;
   border: none;
-  border-radius: 0 !important;
+  border-radius: 8px;
   padding: 9px 0;
   margin-bottom: 7px;
   font-size: 1em;
@@ -140,7 +140,7 @@
     top: 48px;
     right: 2vw;
     min-width: 90vw;
-    border-radius: 0 !important;
+    border-radius: 12px;
     padding: 14px 8px 10px 8px;
     z-index: 4000;
   }
@@ -182,7 +182,7 @@ body:not(.header-hidden) .app-container {
   }
   .main-header {
     margin-bottom: 0 !important;
-    box-shadow: none !important;
+    box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
   }
 }
 @media (max-width: 600px) {
@@ -245,7 +245,7 @@ body:not(.header-hidden) .remote-video, body:not(.header-hidden) .local-video {
   height: 38px;
   border: 4px solid #444;
   border-top: 4px solid #007aff;
-  border-radius: 0 !important;
+  border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 18px;
 }
@@ -271,8 +271,8 @@ body:not(.header-hidden) .remote-video, body:not(.header-hidden) .local-video {
   left: 0;
   bottom: 48px;
   background: #232323;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  border-radius: 10px;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -361,7 +361,7 @@ body.split-mode .remote-video {
   height: 100vh;
   object-fit: cover;
   z-index: 1;
-  border-radius: 0 !important;
+  border-radius: 0;
 }
 body.split-mode .local-video {
   position: static;
@@ -369,7 +369,7 @@ body.split-mode .local-video {
   height: 100vh;
   object-fit: cover;
   z-index: 2;
-  border-radius: 0 !important;
+  border-radius: 0;
   opacity: 0.98;
   background: #181a1b;
 }
@@ -399,8 +399,8 @@ body.split-mode .local-video {
     background: none !important;
   }
   body.split-mode .remote-video {
-    border-radius: 0 !important;
-    box-shadow: none !important;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
     border-bottom: 1.5px solid #232323;
     width: 100vw !important;
     height: 100% !important;
@@ -410,8 +410,8 @@ body.split-mode .local-video {
     background: #181a1b;
   }
   body.split-mode .local-video {
-    border-radius: 0 !important;
-    box-shadow: none !important;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 -2px 12px 0 rgba(0,0,0,0.10);
     border-top: none;
     width: 100vw !important;
     height: 50vh !important;
@@ -437,8 +437,8 @@ body.split-mode .local-video {
   z-index: 3000;
   background: transparent;
   padding: 0.5em 0 0.9em 0;
-  box-shadow: none !important;
-  border-radius: 0 !important;
+  box-shadow: none;
+  border-radius: 0;
   pointer-events: auto;
 }
 
@@ -465,8 +465,8 @@ body.split-mode .local-video {
   transform: translate(-50%, 0);
   background: #232323;
   color: #fff;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  border-radius: 12px;
+  box-shadow: 0 4px 32px 0 rgba(0,0,0,0.18);
   padding: 2em 2.5em 1.5em 2.5em;
   display: flex;
   flex-direction: column;
@@ -479,7 +479,7 @@ body.split-mode .local-video {
   width: 32px; height: 32px;
   border: 4px solid #444;
   border-top: 4px solid #27ae60;
-  border-radius: 0 !important;
+  border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -493,7 +493,7 @@ body.split-mode .local-video {
   display: inline-block;
   width: 10px;
   height: 10px;
-  border-radius: 0 !important;
+  border-radius: 50%;
   margin-right: 4px;
   vertical-align: middle;
   background: #e74c3c; /* красная по умолчанию */
@@ -546,15 +546,15 @@ body, html {
 
 
 /* --- Видео --- */
-/* Видео всегда на чёрном фоне, без белого! */
 .remote-video, .local-video {
   width: 100vw;
   height: 100vh;
   object-fit: cover;
-  background: #000 !important;
+  background: #000;
   border-radius: 0 !important;
 }
-/* PIP-режим: строго фиксированные размеры, всегда поверх, фон тёмный, только один блок! */
+
+/* PIP-режим локального видео (маленькое окно в углу, если не split-mode) */
 body:not(.split-mode) .local-video {
   position: absolute;
   width: 220px;
@@ -563,14 +563,15 @@ body:not(.split-mode) .local-video {
   right: 24px;
   z-index: 2100;
   border: none;
-  background: #181a1b !important;
-  opacity: 0.96;
+  background: #222;
+  opacity: 0.92;
   transition: opacity 0.2s, width 0.2s, height 0.2s;
-  box-shadow: none !important;
-  border-radius: 0 !important;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
+  border-radius: 10px;
   object-fit: cover;
   pointer-events: auto;
 }
+
 @media (max-width: 900px) {
   body:not(.split-mode) .local-video {
     width: 130px;
@@ -579,21 +580,20 @@ body:not(.split-mode) .local-video {
     top: 8px;
   }
 }
+
 @media (max-width: 600px) {
   body:not(.split-mode) .local-video {
-    width: 72px;
-    height: 52px;
-    right: 6px;
-    top: 6px;
-    border-radius: 0 !important;
-    box-shadow: none !important;
+    width: 88px;
+    height: 62px;
+    right: 8px;
+    top: 8px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
     z-index: 2100;
     opacity: 0.96;
-    background: #181a1b !important;
+    background: #222;
     transition: opacity 0.2s, width 0.2s, height 0.2s;
     pointer-events: auto;
-  }
-}
   }
 }
 }
@@ -650,12 +650,12 @@ body.split-mode .local-video {
   }
   body.split-mode .remote-video {
     border-radius: 12px 12px 0 0;
-    box-shadow: none !important;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
     border-bottom: 1.5px solid #232323;
   }
   body.split-mode .local-video {
     border-radius: 0 0 12px 12px;
-    box-shadow: none !important;
+    box-shadow: 0 -2px 12px 0 rgba(0,0,0,0.10);
     border-top: none;
   }
   body.split-mode .remote-video-wrap {
@@ -695,7 +695,7 @@ body.split-mode .local-video {
     right: 8px;
     top: 8px;
     border-radius: 10px;
-    box-shadow: none !important;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
     z-index: 2100;
     opacity: 0.96;
     background: #222;
@@ -722,38 +722,29 @@ body.split-mode .local-video {
   z-index: 3000;
   background: transparent;
   padding: 0.5em 0 0.9em 0;
-  box-shadow: none !important;
+  box-shadow: none;
   border-radius: 0;
   pointer-events: auto;
 }
 @media (max-width: 600px) {
   .call-controls {
-    gap: 12px;
+    gap: 8px;
     padding-bottom: 1.2em;
-    left: 0;
-    right: 0;
-    width: 100vw;
-    justify-content: center;
-    align-items: center;
   }
   .control-btn {
-    width: 44px;
-    height: 44px;
     min-width: 44px;
     min-height: 44px;
-    font-size: 1.3em;
-    border-radius: 50%;
+    font-size: 1.2em;
     pointer-events: auto;
-    box-shadow: none !important;
   }
 }
 
-/* Кнопки управления: современный вид, UX, анимация, доступность */
+/* Кнопки всегда кликабельны, визуальная обратная связь */
 .control-btn {
   width: 56px;
   height: 56px;
   border: none;
-  border-radius: 50%;
+  border-radius: 0;
   background: #232323;
   color: #fff;
   font-size: 24px;
@@ -761,60 +752,11 @@ body.split-mode .local-video {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.18s, color 0.18s, opacity 0.18s, transform 0.12s;
+  transition: background 0.2s, color 0.2s, opacity 0.2s, box-shadow 0.18s;
   opacity: 1;
   touch-action: manipulation;
   pointer-events: auto !important;
-  box-shadow: none !important;
-  outline: none;
-  position: relative;
-  will-change: transform, box-shadow;
-  user-select: none;
-}
-.control-btn:active, .control-btn:focus {
-  background: #444;
-  outline: none;
-  box-shadow: 0 0 0 3px #007aff, 0 2px 16px 0 rgba(0,0,0,0.18);
-  transform: scale(0.96);
-}
-.control-btn:hover:not(:disabled):not([aria-pressed="false"]) {
-  background: #2d2d2d;
-  color: #fff;
-  box-shadow: 0 4px 18px 0 rgba(0,122,255,0.10);
-  opacity: 1;
-}
-.control-btn:disabled,
-.control-btn[aria-pressed="false"] {
-  opacity: 0.45 !important;
-  background: #232323 !important;
-  color: #aaa !important;
-  cursor: not-allowed !important;
-  box-shadow: none !important;
-  pointer-events: auto !important;
-  filter: grayscale(0.25);
-}
-.control-btn svg {
-  width: 1.5em;
-  height: 1.5em;
-  display: block;
-}
-.control-btn.danger {
-  background: #FF3B30;
-  color: #fff;
-  box-shadow: 0 2px 12px 0 rgba(255,59,48,0.18);
-}
-.control-btn.danger:active, .control-btn.danger:focus {
-  background: #d32f2f;
-  box-shadow: 0 0 0 3px #ff3b30, 0 2px 16px 0 rgba(255,59,48,0.18);
-}
-.control-btn.danger:disabled,
-.control-btn.danger[aria-pressed="false"] {
-  background: #ffb3b3 !important;
-  color: #fff !important;
-  opacity: 0.45 !important;
-  box-shadow: none !important;
-  cursor: not-allowed !important;
-}
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
 }
 
 /* Яркая обратная связь при нажатии */
@@ -1109,8 +1051,8 @@ body.split-mode .local-video {
   color: #fff;
 }
 #authForm .btn.google {
-  background: #232323;
-  color: #fff;
+  background: #fff;
+  color: #232323;
   font-weight: 600;
 }
 #authForm .btn:active {

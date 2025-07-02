@@ -339,7 +339,7 @@ nextBtn.onclick = () => {
   updateChatBtnVisibility();
 };
 
-// Открытие чата только по клику на chatBtn
+// Открытие чата
 chatBtn.onclick = () => {
   if (!chatPanel || !roomId) return;
   chatPanel.classList.add('open');
@@ -468,7 +468,10 @@ async function connectWith(partnerUid, partnerKey, isPassive = false) {
   await setupPeerConnection();
   listenToChat();
   updateChatBtnVisibility();
-  // Чат НЕ открывается автоматически при подключении
+  // Открываем чат автоматически при подключении
+  if (chatPanel) chatPanel.classList.add('open');
+  setTimeout(() => { chatInput && chatInput.focus(); }, 120);
+  // Активируем все control-кнопки
   setControlsEnabled(true);
 }
 
