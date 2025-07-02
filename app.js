@@ -129,12 +129,10 @@ function updateChatBtnVisibility() {
 }
 
 // Управление доступностью кнопок управления
-// Управление доступностью control-кнопок
 function setControlsEnabled(enabled) {
-  if (stopBtn) stopBtn.disabled = !enabled;
-  if (nextBtn) nextBtn.disabled = !enabled;
-  if (moreMenuBtn) moreMenuBtn.disabled = !enabled;
-  // chatBtn управляется отдельно через updateChatBtnVisibility
+  [stopBtn, nextBtn, moreMenuBtn, chatBtn].forEach(btn => {
+    if (btn) btn.disabled = !enabled;
+  });
 }
 const authModal = document.getElementById('authModal');
 const searchingOverlay = document.getElementById('searchingOverlay');
@@ -326,17 +324,12 @@ camBtn.onclick = async () => {
 stopBtn.onclick = () => {
   // Завершить текущий чат и просто сбросить состояние (без автопоиска)
   endCall();
-  // После завершения чата активировать только кнопки поиска и "ещё"
-  setControlsEnabled(true);
-  updateChatBtnVisibility();
 };
 nextBtn.onclick = () => {
   // Завершить текущий чат и сразу начать поиск нового
   endCall(true);
   // Если не было комнаты — всё равно начать поиск нового
   if (!isSearching) startSearching();
-  setControlsEnabled(true);
-  updateChatBtnVisibility();
 };
 
 // Открытие чата
@@ -471,7 +464,7 @@ async function connectWith(partnerUid, partnerKey, isPassive = false) {
   // Открываем чат автоматически при подключении
   if (chatPanel) chatPanel.classList.add('open');
   setTimeout(() => { chatInput && chatInput.focus(); }, 120);
-  // Активируем все control-кнопки
+  // Активируем кнопки управления
   setControlsEnabled(true);
 }
 
@@ -532,8 +525,7 @@ function endCall(findNext) {
   if (chatMessages) chatMessages.innerHTML = '';
   if (chatPanel) chatPanel.classList.remove('open');
   setTyping(false);
-  // После завершения чата chatBtn всегда неактивен, остальные control-кнопки активны
-  setControlsEnabled(true);
+  setControlsEnabled(false);
   updateChatBtnVisibility();
   if (searchingOverlay) searchingOverlay.classList.add('hidden');
   if (remoteVideo) remoteVideo.classList.remove('hidden');
