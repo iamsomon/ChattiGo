@@ -391,6 +391,17 @@ body.split-mode .local-video {
     padding: 0 !important;
     box-sizing: border-box;
   }
+  /* Визуальное разделение split-режима на мобильных */
+  body.split-mode .remote-video {
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
+    border-bottom: 1.5px solid #232323;
+  }
+  body.split-mode .local-video {
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 -2px 12px 0 rgba(0,0,0,0.10);
+    border-top: none;
+  }
   body.split-mode .remote-video-wrap {
     display: flex;
     align-items: stretch;
@@ -546,6 +557,8 @@ body, html {
 
 
 /* PEEP-режим (маленькое локальное видео) — классика */
+
+/* PEEP/PIP-режим локального видео (маленькое, справа сверху) */
 .local-video {
   position: absolute;
   width: 220px;
@@ -558,7 +571,9 @@ body, html {
   opacity: 0.92;
   transition: opacity 0.2s, width 0.2s, height 0.2s;
   box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
+  border-radius: 10px;
 }
+
 
 @media (max-width: 900px) {
   .local-video {
@@ -569,23 +584,23 @@ body, html {
   }
 }
 
-@media (max-width: 600px) {
-  .local-video {
-    width: 90px;
-    height: 64px;
-    right: 6px;
-    top: 6px;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
-  }
-}
 
-@media (max-width: 900px) {
-  .local-video {
-    width: 160px;
-    height: 110px;
+/* PIP-режим локального видео на мобильных (НЕ split-mode) */
+
+@media (max-width: 600px) {
+  /* Только для PIP-режима, не split-mode! */
+  body:not(.split-mode) .local-video {
+    position: absolute;
+    width: 88px;
+    height: 62px;
     right: 8px;
     top: 8px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
+    z-index: 2;
+    opacity: 0.96;
+    background: #222;
+    transition: opacity 0.2s, width 0.2s, height 0.2s;
   }
 }
 
