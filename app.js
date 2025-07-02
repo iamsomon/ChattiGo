@@ -15,91 +15,6 @@ const auth = firebase.auth();
 const db = firebase.database();
 
 // === DOM ===
-// === HEADER SHOW/HIDE (Mobile UX) ===
-const mainHeader = document.getElementById('mainHeader');
-let headerVisible = true;
-let headerHideTimeout = null;
-
-function setHeaderVisible(visible) {
-  headerVisible = visible;
-  document.body.classList.toggle('header-hidden', !visible);
-  if (mainHeader) mainHeader.classList.toggle('header-hidden', !visible);
-  // Плавная анимация затемнения/осветления видео при скрытии header
-  const videos = document.querySelectorAll('.remote-video, .local-video');
-  videos.forEach(v => {
-    v.style.transition = 'box-shadow 0.32s cubic-bezier(0.4,0,0.2,1), filter 0.32s cubic-bezier(0.4,0,0.2,1)';
-    if (!visible) {
-      v.style.boxShadow = '0 0 0 4px #007aff44';
-      v.style.filter = 'brightness(1.08)';
-    } else {
-      v.style.boxShadow = '';
-      v.style.filter = '';
-    }
-  });
-}
-
-// На мобильных: по тапу на видео — скрыть/показать header
-function setupHeaderHideOnTap() {
-  if (window.matchMedia('(max-width: 600px)').matches) {
-    const videoArea = document.querySelector('.video-container');
-    if (videoArea) {
-      // Снимаем предыдущий обработчик, если был
-      videoArea.onclick = null;
-      videoArea.onclick = () => {
-        setHeaderVisible(!headerVisible);
-      };
-    }
-  }
-}
-setupHeaderHideOnTap();
-
-// При старте всегда показываем header
-setHeaderVisible(true);
-
-// При изменении размера экрана — пересоздать обработчик
-window.addEventListener('resize', setupHeaderHideOnTap);
-
-// === Account menu logic ===
-const accountBtn = document.getElementById('accountBtn');
-const accountMenu = document.getElementById('accountMenu');
-if (accountBtn && accountMenu) {
-  accountBtn.onclick = (e) => {
-    e.stopPropagation();
-    accountMenu.classList.toggle('hidden');
-    // Анимация появления меню
-    if (!accountMenu.classList.contains('hidden')) {
-      accountMenu.style.transform = 'scale(1.04) translateY(-8px)';
-      accountMenu.style.opacity = '0.7';
-      setTimeout(() => {
-        accountMenu.style.transform = '';
-        accountMenu.style.opacity = '';
-      }, 120);
-    }
-  };
-  document.addEventListener('click', (e) => {
-    if (!accountMenu.contains(e.target) && e.target !== accountBtn) {
-      accountMenu.classList.add('hidden');
-    }
-  });
-}
-
-// Заполняем профиль в меню аккаунта
-function updateAccountMenu(user) {
-  const nameEl = document.getElementById('accountName');
-  const emailEl = document.getElementById('accountEmail');
-  const avatarEl = document.getElementById('accountAvatar');
-  if (!user) {
-    nameEl && (nameEl.textContent = 'Гость');
-    emailEl && (emailEl.textContent = '');
-    if (avatarEl) avatarEl.src = 'https://i.pravatar.cc/64';
-    return;
-  }
-  nameEl && (nameEl.textContent = user.displayName || 'Гость');
-  emailEl && (emailEl.textContent = user.email || (user.isAnonymous ? 'Анонимно' : ''));
-  if (avatarEl) {
-    avatarEl.src = user.photoURL || `https://i.pravatar.cc/64?u=${user.uid}`;
-  }
-}
 const localVideo = document.getElementById('localVideo');
 const remoteVideo = document.getElementById('remoteVideo');
 const micBtn = document.getElementById('micBtn');
@@ -114,23 +29,6 @@ const typingIndicator = document.getElementById('typingIndicator');
 const chatMessages = document.getElementById('chatMessages');
 const chatForm = document.getElementById('chatForm');
 const chatInput = document.getElementById('chatInput');
-// Управление видимостью кнопки чата
-function updateChatBtnVisibility() {
-  if (!chatBtn) return;
-  if (roomId) {
-    chatBtn.style.display = '';
-  } else {
-    chatBtn.style.display = 'none';
-    if (chatPanel) chatPanel.classList.remove('open');
-  }
-}
-
-// Управление доступностью кнопок управления
-function setControlsEnabled(enabled) {
-  [stopBtn, nextBtn, moreMenuBtn, chatBtn].forEach(btn => {
-    if (btn) btn.disabled = !enabled;
-  });
-}
 const authModal = document.getElementById('authModal');
 const searchingOverlay = document.getElementById('searchingOverlay');
 const moreMenuBtn = document.getElementById('moreMenuBtn');
@@ -214,13 +112,11 @@ auth.onAuthStateChanged(async user => {
   if (!user) {
     authModal.classList.remove('hidden');
     setOnlineStatus(false);
-    updateAccountMenu(null);
     return;
   }
   currentUser = user;
   setOnlineStatus(true);
   authModal.classList.add('hidden');
-  updateAccountMenu(user);
   await startLocalVideo();
   startSearching();
   chatPanel.classList.remove('open'); // Чат скрыт по умолчанию
@@ -251,18 +147,6 @@ async function startLocalVideo() {
   try {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       alert('Ваш браузер не поддерживает getUserMedia.');
-      return;
-    }
-    if (!camEnabled && !micEnabled) {
-      // Оба выключены — не запрашиваем getUserMedia, скрываем видео
-      if (localStream) {
-        localStream.getTracks().forEach(t => t.stop());
-        localStream = null;
-      }
-      localVideo.srcObject = null;
-      localVideo.classList.add('hidden');
-      updateMicUI();
-      updateCamUI();
       return;
     }
     if (localStream) {
@@ -319,17 +203,15 @@ camBtn.onclick = async () => {
 };
 
 stopBtn.onclick = () => {
-  if (!roomId) return;
   endCall();
 };
 nextBtn.onclick = () => {
-  if (!roomId) return;
   endCall(true);
 };
 
 // Открытие чата
 chatBtn.onclick = () => {
-  if (!chatPanel || !roomId) return;
+  if (!chatPanel) return;
   chatPanel.classList.add('open');
   setTimeout(() => {
     chatInput && chatInput.focus();
@@ -388,9 +270,6 @@ function startSearching() {
   if (remoteVideo) remoteVideo.classList.add('hidden');
   // Очищаем чат при новом поиске
   if (chatMessages) chatMessages.innerHTML = '';
-  roomId = null;
-  updateChatBtnVisibility();
-  setControlsEnabled(false);
   const queueRef = db.ref('queue');
   myQueueRef = queueRef.push({ uid: currentUser.uid, ts: Date.now(), looking: true, last: lastPartnerUid || null });
   myQueueRef.onDisconnect().remove();
@@ -455,12 +334,6 @@ async function connectWith(partnerUid, partnerKey, isPassive = false) {
   roomId = [currentUser.uid, partnerUid].sort().join('_');
   await setupPeerConnection();
   listenToChat();
-  updateChatBtnVisibility();
-  // Открываем чат автоматически при подключении
-  if (chatPanel) chatPanel.classList.add('open');
-  setTimeout(() => { chatInput && chatInput.focus(); }, 120);
-  // Активируем кнопки управления
-  setControlsEnabled(true);
 }
 
 async function setupPeerConnection() {
@@ -517,13 +390,10 @@ function endCall(findNext) {
   }
   if (myQueueRef) { myQueueRef.remove(); myQueueRef = null; }
   remoteVideo.srcObject = null;
-  if (chatMessages) chatMessages.innerHTML = '';
-  if (chatPanel) chatPanel.classList.remove('open');
-  setTyping(false);
-  setControlsEnabled(false);
-  updateChatBtnVisibility();
   if (searchingOverlay) searchingOverlay.classList.add('hidden');
   if (remoteVideo) remoteVideo.classList.remove('hidden');
+  // Очищаем чат при разрыве
+  if (chatMessages) chatMessages.innerHTML = '';
   if (findNext) setTimeout(() => startSearching(), 200);
 }
 
@@ -531,7 +401,7 @@ function endCall(findNext) {
 chatForm.onsubmit = e => {
   e.preventDefault();
   const msg = chatInput.value.trim();
-  if (!msg || !roomId || !currentUser) return;
+  if (!msg || !roomId) return;
   db.ref('rooms/' + roomId + '/messages').push({ text: msg, sender: currentUser.uid, ts: Date.now() });
   chatInput.value = '';
   setTyping(false);
