@@ -9,23 +9,33 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#181a1b">
   <meta name="format-detection" content="telephone=no">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
   <title>ChattiGo</title>
 </head>
 <body>
-  <header style="padding:0.5em 0 0.5em 0.5em;display:flex;align-items:center;gap:10px;">
-    <h1 style="font-size:1.5em;font-weight:700;margin:0;display:flex;align-items:center;gap:8px;">
-      ChattiGo
-      <span id="onlineDot" class="online-dot offline"></span>
-      <span id="onlineCount">0</span>
-    </h1>
-    <button id="themeBtn" title="Сменить тему" style="margin-left:16px;background:none;border:none;cursor:pointer;">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 2a10 10 0 0 0 0 20" stroke="currentColor" stroke-width="2"/></svg>
-    </button>
-    <button id="logoutBtn" title="Выйти" style="margin-left:8px;background:none;border:none;cursor:pointer;">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M16 17l5-5-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 4v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
+  <header class="main-header" id="mainHeader">
+    <div class="header-left">
+      <span class="site-icon" aria-label="ChattiGo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="15" stroke="#007aff" stroke-width="2"/><path d="M10 18c2 2 6 2 8 0" stroke="#007aff" stroke-width="2" stroke-linecap="round"/><circle cx="12.5" cy="13.5" r="1.5" fill="#007aff"/><circle cx="19.5" cy="13.5" r="1.5" fill="#007aff"/></svg>
+      </span>
+      <span class="site-title">ChattiGo</span>
+    </div>
+    <div class="header-right">
+      <button id="accountBtn" class="account-btn" title="Аккаунт">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="15" stroke="#fff" stroke-width="2"/><circle cx="16" cy="13" r="5" stroke="#fff" stroke-width="2"/><path d="M6 26c2.5-4 17.5-4 20 0" stroke="#fff" stroke-width="2"/></svg>
+      </button>
+      <div id="accountMenu" class="account-menu hidden">
+        <div class="account-avatar"><img id="accountAvatar" src="https://i.pravatar.cc/64" alt="avatar"></div>
+        <div class="account-name" id="accountName">Имя пользователя</div>
+        <div class="account-email" id="accountEmail">user@email.com</div>
+        <button id="editProfileBtn" class="account-action">Редактировать профиль</button>
+        <button id="logoutBtn" class="account-action logout">Выйти</button>
+      </div>
+    </div>
   </header>
   <div class="app-container">
     <div class="video-container">

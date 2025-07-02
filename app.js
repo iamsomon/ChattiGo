@@ -15,6 +15,63 @@ const auth = firebase.auth();
 const db = firebase.database();
 
 // === DOM ===
+// === HEADER SHOW/HIDE (Mobile UX) ===
+const mainHeader = document.getElementById('mainHeader');
+let headerVisible = true;
+let headerHideTimeout = null;
+
+function setHeaderVisible(visible) {
+  headerVisible = visible;
+  document.body.classList.toggle('header-hidden', !visible);
+  if (mainHeader) mainHeader.classList.toggle('header-hidden', !visible);
+}
+
+// На мобильных: по тапу на видео — скрыть/показать header
+function setupHeaderHideOnTap() {
+  if (window.matchMedia('(max-width: 600px)').matches) {
+    const videoArea = document.querySelector('.video-container');
+    if (videoArea) {
+      videoArea.addEventListener('click', () => {
+        setHeaderVisible(!headerVisible);
+      });
+    }
+  }
+}
+setupHeaderHideOnTap();
+
+// При старте всегда показываем header
+setHeaderVisible(true);
+
+// При изменении размера экрана — пересоздать обработчик
+window.addEventListener('resize', setupHeaderHideOnTap);
+
+// === Account menu logic ===
+const accountBtn = document.getElementById('accountBtn');
+const accountMenu = document.getElementById('accountMenu');
+if (accountBtn && accountMenu) {
+  accountBtn.onclick = (e) => {
+    e.stopPropagation();
+    accountMenu.classList.toggle('hidden');
+  };
+  document.addEventListener('click', (e) => {
+    if (!accountMenu.contains(e.target) && e.target !== accountBtn) {
+      accountMenu.classList.add('hidden');
+    }
+  });
+}
+
+// Заполняем профиль в меню аккаунта
+function updateAccountMenu(user) {
+  if (!user) return;
+  const nameEl = document.getElementById('accountName');
+  const emailEl = document.getElementById('accountEmail');
+  const avatarEl = document.getElementById('accountAvatar');
+  nameEl && (nameEl.textContent = user.displayName || 'Гость');
+  emailEl && (emailEl.textContent = user.email || (user.isAnonymous ? 'Анонимно' : ''));
+  if (avatarEl) {
+    avatarEl.src = user.photoURL || `https://i.pravatar.cc/64?u=${user.uid}`;
+  }
+}
 const localVideo = document.getElementById('localVideo');
 const remoteVideo = document.getElementById('remoteVideo');
 const micBtn = document.getElementById('micBtn');
@@ -112,11 +169,13 @@ auth.onAuthStateChanged(async user => {
   if (!user) {
     authModal.classList.remove('hidden');
     setOnlineStatus(false);
+    updateAccountMenu(null);
     return;
   }
   currentUser = user;
   setOnlineStatus(true);
   authModal.classList.add('hidden');
+  updateAccountMenu(user);
   await startLocalVideo();
   startSearching();
   chatPanel.classList.remove('open'); // Чат скрыт по умолчанию
