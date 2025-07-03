@@ -118,7 +118,6 @@ auth.onAuthStateChanged(async user => {
   setOnlineStatus(true);
   authModal.classList.add('hidden');
   await startLocalVideo();
-  startSearching();
   chatPanel.classList.remove('open'); // Чат скрыт по умолчанию
   listenOnlineCount();
 });
@@ -206,7 +205,7 @@ stopBtn.onclick = () => {
   endCall();
 };
 nextBtn.onclick = () => {
-  endCall(true);
+  startSearching(); // Теперь поиск начинается только по нажатию на nextBtn
 };
 
 // Открытие чата
