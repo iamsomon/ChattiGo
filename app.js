@@ -59,12 +59,20 @@ if (switchCamBtn) {
 
 // === More menu (троеточие) ===
 if (moreMenuBtn && moreMenu) {
-  moreMenuBtn.onclick = () => {
-    moreMenu.classList.toggle('hidden');
+  let moreMenuOpen = false;
+  moreMenuBtn.onclick = (e) => {
+    e.stopPropagation();
+    moreMenuOpen = !moreMenuOpen;
+    if (moreMenuOpen) {
+      moreMenu.classList.remove('hidden');
+    } else {
+      moreMenu.classList.add('hidden');
+    }
   };
   document.addEventListener('click', e => {
     if (!moreMenu.contains(e.target) && e.target !== moreMenuBtn) {
       moreMenu.classList.add('hidden');
+      moreMenuOpen = false;
     }
   });
 }
@@ -205,7 +213,9 @@ stopBtn.onclick = () => {
   endCall();
 };
 nextBtn.onclick = () => {
-  startSearching(); // Теперь поиск начинается только по нажатию на nextBtn
+  // Всегда завершаем текущий поиск/разговор перед новым поиском
+  if (typeof endCall === 'function') endCall(false);
+  setTimeout(() => startSearching(), 50);
 };
 
 // Открытие чата
