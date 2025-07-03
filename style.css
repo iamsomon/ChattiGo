@@ -195,9 +195,10 @@ body.split-mode .local-video {
     padding: 0;
   }
   body.split-mode .remote-video-wrap {
-    height: calc(50% - 36px); /* учесть высоту call-controls */
+    flex: 1 1 0;
+    height: 0;
     min-height: 0;
-    max-height: calc(50% - 36px);
+    max-height: none;
     display: flex;
     align-items: stretch;
     justify-content: stretch;
@@ -209,10 +210,12 @@ body.split-mode .local-video {
     min-height: 0;
     object-fit: cover;
     background: #181a1b;
+    display: block;
   }
   body.split-mode .local-video {
-    height: calc(50% - 36px);
-    max-height: calc(50% - 36px);
+    flex: 1 1 0;
+    height: 0;
+    max-height: none;
     width: 100vw !important;
     min-height: 0;
     object-fit: cover;
@@ -221,7 +224,7 @@ body.split-mode .local-video {
     opacity: 0.98;
     z-index: 2;
     border-radius: 0;
-    /* bottom: 0; убрано, чтобы не залезать под call-controls */
+    display: block;
   }
   .call-controls {
     position: fixed !important;
