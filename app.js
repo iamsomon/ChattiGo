@@ -31,8 +31,8 @@ const chatForm = document.getElementById('chatForm');
 const chatInput = document.getElementById('chatInput');
 const authModal = document.getElementById('authModal');
 const searchingOverlay = document.getElementById('searchingOverlay');
-const moreMenuBtn = document.getElementById('moreMenuBtn');
-const moreMenu = document.getElementById('moreMenu');
+// const moreMenuBtn = document.getElementById('moreMenuBtn');
+// const moreMenu = document.getElementById('moreMenu');
 const onlineCountEl = document.getElementById('onlineCount');
 const onlineDotEl = document.getElementById('onlineDot');
 const splitBtn = document.getElementById('splitBtn');
@@ -43,7 +43,6 @@ if (splitBtn) {
   splitBtn.onclick = () => {
     splitMode = !splitMode;
     document.body.classList.toggle('split-mode', splitMode);
-    if (moreMenu) moreMenu.classList.add('hidden');
   };
 }
 
@@ -53,29 +52,10 @@ if (switchCamBtn) {
   switchCamBtn.onclick = async () => {
     currentFacing = currentFacing === 'user' ? 'environment' : 'user';
     await startLocalVideo();
-    if (moreMenu) moreMenu.classList.add('hidden');
   };
 }
 
-// === More menu (троеточие) ===
-if (moreMenuBtn && moreMenu) {
-  let moreMenuOpen = false;
-  moreMenuBtn.onclick = (e) => {
-    e.stopPropagation();
-    moreMenuOpen = !moreMenuOpen;
-    if (moreMenuOpen) {
-      moreMenu.classList.remove('hidden');
-    } else {
-      moreMenu.classList.add('hidden');
-    }
-  };
-  document.addEventListener('click', e => {
-    if (!moreMenu.contains(e.target) && e.target !== moreMenuBtn) {
-      moreMenu.classList.add('hidden');
-      moreMenuOpen = false;
-    }
-  });
-}
+// === More menu (троеточие) — удалено ===
 
 let currentUser = null;
 let localStream = null;
