@@ -162,8 +162,13 @@ body.split-mode .local-video {
     display: flex;
     flex-direction: column;
     width: 100vw;
-    height: 100vh;
-    position: relative;
+    /* Высота только между хедером и call-controls */
+    position: absolute;
+    top: 56px;
+    bottom: 72px; /* высота call-controls + отступ */
+    left: 0;
+    right: 0;
+    height: auto;
     gap: 0;
     margin: 0;
     padding: 0;
@@ -176,9 +181,9 @@ body.split-mode .local-video {
     padding: 0;
   }
   body.split-mode .remote-video-wrap {
-    height: 50vh !important;
+    height: 50%;
     min-height: 0;
-    max-height: 50vh;
+    max-height: 50%;
     display: flex;
     align-items: stretch;
     justify-content: stretch;
@@ -192,8 +197,8 @@ body.split-mode .local-video {
     background: #181a1b;
   }
   body.split-mode .local-video {
-    height: 50vh !important;
-    max-height: 50vh;
+    height: 50%;
+    max-height: 50%;
     width: 100vw !important;
     min-height: 0;
     object-fit: cover;
