@@ -383,7 +383,7 @@ body, html {
 
 body:not(.split-mode) .local-video {
   right: 24px;
-  bottom: 24px;
+  top: 24px;
 }
 
 @media (max-width: 900px) {
@@ -411,26 +411,11 @@ body:not(.split-mode) .local-video {
   /* display: block; — не скрываем, чтобы не было пустого пространства */
 }
 
-.call-controls {
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: env(safe-area-inset-bottom, 0px);
-  z-index: 100;
-  background: rgba(24,24,24,0.98);
-  padding: 0.5em 0 0.9em 0;
-  box-shadow: 0 -2px 16px 0 rgba(0,0,0,0.12);
-  border-radius: 0;
-}
-
 @media (max-width: 600px) {
   .call-controls {
     gap: 8px;
     padding-bottom: 1.2em;
-    background: rgba(24,24,24,0.98);
+    background: none !important;
   }
   .control-btn {
     min-width: 44px;
