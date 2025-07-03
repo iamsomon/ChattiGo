@@ -183,8 +183,9 @@ body.split-mode .local-video {
     position: relative;
     gap: 0;
     margin: 0;
-    padding: 0;
+    padding: 0 0 72px 0; /* отступ снизу под call-controls */
     overflow: hidden;
+    box-sizing: border-box;
   }
   body.split-mode .remote-video-wrap,
   body.split-mode .local-video {
@@ -194,9 +195,9 @@ body.split-mode .local-video {
     padding: 0;
   }
   body.split-mode .remote-video-wrap {
-    height: 50%;
+    height: calc(50% - 36px); /* учесть высоту call-controls */
     min-height: 0;
-    max-height: 50%;
+    max-height: calc(50% - 36px);
     display: flex;
     align-items: stretch;
     justify-content: stretch;
@@ -210,8 +211,8 @@ body.split-mode .local-video {
     background: #181a1b;
   }
   body.split-mode .local-video {
-    height: 50%;
-    max-height: 50%;
+    height: calc(50% - 36px);
+    max-height: calc(50% - 36px);
     width: 100vw !important;
     min-height: 0;
     object-fit: cover;
@@ -220,7 +221,7 @@ body.split-mode .local-video {
     opacity: 0.98;
     z-index: 2;
     border-radius: 0;
-    bottom: 0;
+    /* bottom: 0; убрано, чтобы не залезать под call-controls */
   }
   .call-controls {
     position: fixed !important;
