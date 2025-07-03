@@ -400,6 +400,12 @@ body, html {
   display: none;
 }
 
+.remote-video.hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  /* display: block; — не скрываем, чтобы не было пустого пространства */
+}
+
 .call-controls {
   display: flex;
   justify-content: center;
