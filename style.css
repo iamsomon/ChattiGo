@@ -347,10 +347,15 @@ body, html {
 
 @media (max-width: 900px) {
   .local-video {
-    width: 160px;
-    height: 110px;
+    width: 180px;
+    height: 220px;
     right: 8px;
     top: 8px;
+    /* Вертикальная ориентация */
+    aspect-ratio: 9/16;
+    border-radius: 12px;
+    object-fit: cover;
+    transform: none;
   }
 }
 
@@ -708,7 +713,16 @@ body, html {
 
 
 @media (max-width: 600px) {
-  .local-video { width: 100px; height: 70px; top: 10px; right: 10px; }
+  .local-video {
+    width: 120px;
+    height: 180px;
+    top: 10px;
+    right: 10px;
+    aspect-ratio: 9/16;
+    border-radius: 10px;
+    object-fit: cover;
+    transform: none;
+  }
   .call-controls { gap: 12px; }
   .control-btn { width: 44px; height: 44px; font-size: 18px; }
 }
