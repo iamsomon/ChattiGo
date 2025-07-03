@@ -4,8 +4,8 @@
   width: 100%;
   height: calc(100% - 56px); /* Уменьшение высоты на размер хедера */
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: stretch;
 }
 .searching-overlay {
   position: absolute;
@@ -138,6 +138,11 @@ body.split-mode .video-container {
   width: 100vw;
   height: 100vh;
   position: relative;
+  align-items: stretch;
+  justify-content: stretch;
+  gap: 0;
+  margin: 0;
+  padding: 0;
 }
 body.split-mode .remote-video {
   position: static;
@@ -179,8 +184,10 @@ body.split-mode .local-video {
     flex-direction: column;
     width: 100vw;
     height: 100%;
-    flex: 1 1 auto;
+    flex: 1 1 0;
     position: relative;
+    align-items: stretch;
+    justify-content: stretch;
     gap: 0;
     margin: 0;
     padding: 0 0 72px 0; /* отступ снизу под call-controls */
