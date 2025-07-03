@@ -372,8 +372,6 @@ body, html {
   position: absolute;
   width: 260px;
   height: 180px;
-  top: 24px;
-  right: 24px;
   z-index: 2;
   border: none;
   background: #222;
@@ -386,9 +384,6 @@ body, html {
   .local-video {
     width: 180px;
     height: 220px;
-    right: 8px;
-    top: 8px;
-    /* Вертикальная ориентация */
     aspect-ratio: 9/16;
     border-radius: 12px;
     object-fit: cover;
