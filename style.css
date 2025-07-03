@@ -391,6 +391,16 @@ body, html {
   }
 }
 
+body.split-mode .local-video,
+body.split-mode .remote-video {
+  position: static !important;
+  z-index: auto !important;
+  border-radius: 0 !important;
+  background: none !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
 .local-video.hidden {
   opacity: 0 !important;
   pointer-events: none !important;
