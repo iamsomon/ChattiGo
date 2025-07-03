@@ -368,6 +368,7 @@ body, html {
 }
 
 /* PIP режим локального видео */
+/* PIP режим локального видео */
 .local-video {
   position: absolute;
   width: 260px;
@@ -378,6 +379,11 @@ body, html {
   opacity: 0.92;
   object-fit: cover;
   transition: opacity 0.2s, width 0.2s, height 0.2s;
+}
+
+body:not(.split-mode) .local-video {
+  right: 24px;
+  bottom: 24px;
 }
 
 @media (max-width: 900px) {
