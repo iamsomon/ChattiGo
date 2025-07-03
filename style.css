@@ -397,7 +397,9 @@ body, html {
 }
 
 .local-video.hidden {
-  display: none;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  /* display: block; — не скрываем, чтобы не было пустого пространства */
 }
 
 .remote-video.hidden {
