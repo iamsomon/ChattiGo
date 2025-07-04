@@ -190,7 +190,7 @@ camBtn.onclick = async () => {
 };
 
 stopBtn.onclick = () => {
-  endCall();
+  endCall(false);
 };
 nextBtn.onclick = () => {
   // Всегда завершаем текущий поиск/разговор перед новым поиском
@@ -398,6 +398,7 @@ function endCall(findNext) {
   if (searchingOverlay) searchingOverlay.classList.add('hidden');
   if (remoteVideo) remoteVideo.classList.remove('hidden');
   if (chatMessages) chatMessages.innerHTML = '';
+  // Критично: всегда сбрасываем isSearching, чтобы поиск можно было запустить снова
   isSearching = false;
   if (findNext) setTimeout(() => startSearching(), 200);
 }
