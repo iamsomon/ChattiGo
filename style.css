@@ -244,7 +244,7 @@ body.split-mode .local-video {
 
 /* --- call-controls поверх всего, без перекрытий --- */
 .call-controls {
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
