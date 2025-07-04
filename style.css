@@ -1,3 +1,7 @@
+body:not(.split-mode) .remote-video {
+  object-fit: contain;
+  background: #000;
+}
 /* --- Поиск собеседника overlay --- */
 .remote-video-wrap {
   position: relative;
