@@ -179,6 +179,7 @@ function updateCamUI() {
 }
 
 micBtn.onclick = async () => {
+
   micEnabled = !micEnabled;
   await startLocalVideo();
   updateMicUI();
@@ -191,11 +192,16 @@ camBtn.onclick = async () => {
 
 stopBtn.onclick = () => {
   endCall(false);
+  // После стопа разрешаем повторный поиск сразу
+  isSearching = false;
 };
 nextBtn.onclick = () => {
   // Всегда завершаем текущий поиск/разговор перед новым поиском
-  if (typeof endCall === 'function') endCall(false);
-  setTimeout(() => startSearching(), 50);
+  if (typeof endCall === 'function') {
+    endCall(true); // findNext=true — сразу стартует новый поиск
+  } else {
+    startSearching();
+  }
 };
 
 // Открытие чата
