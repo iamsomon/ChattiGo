@@ -233,13 +233,7 @@ body.split-mode .local-video {
     border-radius: 0;
     display: block;
   }
-  .call-controls {
-    position: fixed !important;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 2000;
-  }
+
 }
 
 /* --- call-controls поверх всего, без перекрытий --- */
