@@ -252,12 +252,23 @@ if (themeBtn) {
 
 
 // === Поиск собеседника ===
+
 function startSearching() {
-  if (isSearching) return;
+  // Защита: поиск только после авторизации
+  if (!currentUser) {
+    console.warn('startSearching: currentUser не определён');
+    return;
+  }
+  // Если уже ищем — сбрасываем предыдущий поиск
+  if (myQueueRef) {
+    myQueueRef.off();
+    myQueueRef.remove();
+    myQueueRef = null;
+  }
+  if (pc) { pc.close(); pc = null; }
   isSearching = true;
   if (searchingOverlay) searchingOverlay.classList.remove('hidden');
   if (remoteVideo) remoteVideo.classList.add('hidden');
-  // Очищаем чат при новом поиске
   if (chatMessages) chatMessages.innerHTML = '';
   const queueRef = db.ref('queue');
   myQueueRef = queueRef.push({ uid: currentUser.uid, ts: Date.now(), looking: true, last: lastPartnerUid || null });
@@ -370,6 +381,7 @@ async function setupPeerConnection() {
   };
 }
 
+
 function endCall(findNext) {
   if (pc) { pc.close(); pc = null; }
   if (roomId) {
@@ -377,12 +389,16 @@ function endCall(findNext) {
     db.ref('rooms/' + roomId).remove();
     roomId = null;
   }
-  if (myQueueRef) { myQueueRef.remove(); myQueueRef = null; }
+  if (myQueueRef) {
+    myQueueRef.off();
+    myQueueRef.remove();
+    myQueueRef = null;
+  }
   remoteVideo.srcObject = null;
   if (searchingOverlay) searchingOverlay.classList.add('hidden');
   if (remoteVideo) remoteVideo.classList.remove('hidden');
-  // Очищаем чат при разрыве
   if (chatMessages) chatMessages.innerHTML = '';
+  isSearching = false;
   if (findNext) setTimeout(() => startSearching(), 200);
 }
 
