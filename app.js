@@ -91,20 +91,42 @@ function listenOnlineCount() {
 
 
 // === UI: Профиль: открытие/закрытие модального окна, заполнение данных, выход ===
+
 const profileBtn = document.getElementById('profileBtn');
 const profileModal = document.getElementById('profileModal');
 const profileCloseBtn = document.getElementById('profileCloseBtn');
 const logoutProfileBtn = document.getElementById('logoutProfileBtn');
 const profileName = document.getElementById('profileName');
 const profileEmail = document.getElementById('profileEmail');
+const profileId = document.getElementById('profileId');
+const profileAvatar = document.getElementById('profileAvatar');
 const editProfileBtn = document.getElementById('editProfileBtn');
+
+function renderProfileModal(user) {
+  // Имя
+  profileName.textContent = user.displayName || 'Пользователь';
+  // Email
+  profileEmail.textContent = user.email || 'Аноним';
+  // UID
+  if (user.uid) {
+    profileId.textContent = 'ID: ' + user.uid.slice(0, 8) + '...';
+    profileId.style.display = 'block';
+  } else {
+    profileId.style.display = 'none';
+  }
+  // Аватар
+  if (user.photoURL) {
+    profileAvatar.innerHTML = `<img src="${user.photoURL}" alt="avatar" />`;
+  } else {
+    // SVG-аватарка (цветная, современная)
+    profileAvatar.innerHTML = `<svg width="72" height="72" viewBox="0 0 72 72" fill="none"><circle cx="36" cy="26" r="18" fill="#fff" stroke="#00B8D9" stroke-width="4"/><ellipse cx="36" cy="54" rx="25" ry="13" fill="#fff" stroke="#00B8D9" stroke-width="4"/><circle cx="36" cy="26" r="12" fill="#00B8D9" fill-opacity="0.18"/></svg>`;
+  }
+}
 
 if (profileBtn && profileModal) {
   profileBtn.onclick = () => {
-    // Заполнить имя и email
     if (auth.currentUser) {
-      profileName.textContent = auth.currentUser.displayName || 'Пользователь';
-      profileEmail.textContent = auth.currentUser.email || 'Аноним';
+      renderProfileModal(auth.currentUser);
     }
     profileModal.classList.remove('hidden');
   };
@@ -120,7 +142,16 @@ if (logoutProfileBtn) {
 }
 if (editProfileBtn) {
   editProfileBtn.onclick = () => {
-    alert('Редактирование профиля будет доступно в будущих обновлениях.');
+    if (!auth.currentUser) return;
+    // Пример: простое редактирование имени через prompt
+    const newName = prompt('Введите новое имя профиля:', auth.currentUser.displayName || '');
+    if (newName && newName.trim() && newName !== auth.currentUser.displayName) {
+      auth.currentUser.updateProfile({ displayName: newName.trim() })
+        .then(() => {
+          renderProfileModal(auth.currentUser);
+        })
+        .catch(e => alert('Ошибка: ' + e.message));
+    }
   };
 }
 
