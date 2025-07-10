@@ -22,38 +22,78 @@
       <span id="onlineCount">0</span>
     </h1>
     <div style="flex:1;"></div>
-    <button id="logoutBtn" title="Профиль" style="margin-left:auto;background:none;border:none;cursor:pointer;">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4" stroke="currentColor" stroke-width="2"/></svg>
+    <button id="profileBtn" title="Профиль" style="margin-left:auto;background:none;border:none;cursor:pointer;">
+      <!-- Современная иконка профиля (2025) -->
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4.2" stroke="currentColor" stroke-width="2.1"/><path d="M3.5 20c0-3.2 5-5.2 8.5-5.2s8.5 2 8.5 5.2" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>
     </button>
+  <!-- Модальное окно профиля -->
+  <div id="profileModal" class="modal hidden">
+    <div class="modal-content profile-modal-content">
+      <button class="profile-close-btn" id="profileCloseBtn" title="Закрыть" style="position:absolute;top:18px;right:18px;background:none;border:none;cursor:pointer;opacity:0.7;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M6 18L18 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="24" r="16" fill="#232323" stroke="#007aff" stroke-width="3"/><ellipse cx="32" cy="48" rx="20" ry="10" fill="#232323" stroke="#007aff" stroke-width="3"/></svg>
+        </div>
+      </div>
+      <div class="profile-info">
+        <div class="profile-name" id="profileName">Пользователь</div>
+        <div class="profile-email" id="profileEmail">email@example.com</div>
+      </div>
+      <div class="profile-actions">
+        <button id="editProfileBtn" class="profile-action-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20h4.5l10-10.1a2.1 2.1 0 0 0-3-3L5.5 17V20z" stroke="currentColor" stroke-width="2"/><path d="M14.5 6.5l3 3" stroke="currentColor" stroke-width="2"/></svg>
+          Редактировать
+        </button>
+        <button id="logoutProfileBtn" class="profile-action-btn danger">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M16 17l5-5-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="5" width="6" height="14" rx="2" stroke="currentColor" stroke-width="2"/></svg>
+          Выйти
+        </button>
+      </div>
+    </div>
+  </div>
   </header>
   <div class="app-container">
     <div class="video-container">
       <div class="remote-video-wrap">
         <video id="remoteVideo" class="remote-video" autoplay playsinline></video>
         <div id="searchingOverlay" class="searching-overlay hidden">
-          <div class="search-spinner"></div>
+          <div class="search-svg-spinner" style="width:72px;height:36px;display:flex;align-items:center;justify-content:center;">
+            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 150' width="72" height="36">
+              <path fill='none' stroke='#008C8C' stroke-width='17' stroke-linecap='round' stroke-dasharray='300 385' stroke-dashoffset='0' d='M275 75c0 31-27 50-50 50-58 0-92-100-150-100-28 0-50 22-50 50s23 50 50 50c58 0 92-100 150-100 24 0 50 19 50 50Z'>
+                <animate attributeName='stroke-dashoffset' calcMode='spline' dur='2' values='685;-685' keySplines='0 0 1 1' repeatCount='indefinite'></animate>
+              </path>
+            </svg>
+          </div>
           <div class="search-text">Поиск собеседника…</div>
         </div>
       </div>
       <video id="localVideo" class="local-video" autoplay muted playsinline></video>
       <div class="call-controls">
         <button id="micBtn" class="control-btn" aria-pressed="true" title="Микрофон">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Zm5 9a5 5 0 0 1-10 0M19 11v1a7 7 0 0 1-14 0v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <!-- Микрофон 2025 -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="10" y="5" width="8" height="14" rx="4" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="8" y="19" width="12" height="3" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="13" y="22" width="2" height="3" rx="1" fill="currentColor"/></svg>
         </button>
         <button id="camBtn" class="control-btn" aria-pressed="true" title="Камера">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="15" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M21 7v10" stroke="currentColor" stroke-width="2"/></svg>
+          <!-- Камера 2025 -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="8" width="16" height="12" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="14" r="3.2" stroke="#007aff" stroke-width="2"/><rect x="20" y="11" width="4" height="6" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
         </button>
         <button id="stopBtn" class="control-btn danger" title="Стоп">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>
+          <!-- Стоп 2025 -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="7" y="7" width="14" height="14" rx="4" fill="currentColor"/></svg>
         </button>
         <button id="nextBtn" class="control-btn" title="Следующий">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <!-- Следующий 2025 -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M10 7l8 7-8 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <button id="chatBtn" class="control-btn" title="Чат">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <!-- Чат 2025 -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="3" y="5" width="22" height="14" rx="5" fill="#222" stroke="currentColor" stroke-width="2.2"/><circle cx="9" cy="12" r="1.5" fill="#007aff"/><circle cx="14" cy="12" r="1.5" fill="#007aff"/><circle cx="19" cy="12" r="1.5" fill="#007aff"/><path d="M8 19l-3 3" stroke="#007aff" stroke-width="2" stroke-linecap="round"/></svg>
         </button>
         <button id="splitBtn" class="control-btn" title="Переключить режим">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="18" rx="2" stroke="currentColor" stroke-width="2"/><rect x="13" y="3" width="8" height="18" rx="2" stroke="currentColor" stroke-width="2"/></svg>
+          <!-- Split 2025 -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="16" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
         </button>
       </div>
     </div>
