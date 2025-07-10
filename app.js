@@ -159,6 +159,13 @@ if (editProfileBtn && editProfileForm && editProfileName) {
     editProfileForm.style.display = 'flex';
     editProfileBtn.style.display = 'none';
     editProfileName.value = auth.currentUser.displayName || '';
+    // Соцсети
+    const socialInput = document.getElementById('editProfileSocial');
+    if (socialInput && auth.currentUser && auth.currentUser.uid) {
+      db.ref('users/' + auth.currentUser.uid + '/social').once('value', snap => {
+        socialInput.value = snap.val() || '';
+      });
+    }
     editProfileName.focus();
   };
   if (cancelEditProfileBtn) {
@@ -170,28 +177,50 @@ if (editProfileBtn && editProfileForm && editProfileName) {
   editProfileForm.onsubmit = async (e) => {
     e.preventDefault();
     const newName = editProfileName.value.trim();
+    const socialInput = document.getElementById('editProfileSocial');
+    const newSocial = socialInput ? socialInput.value.trim() : '';
+    const avatarInput = document.getElementById('editProfileAvatar');
+    let photoURL = null;
+    // Обновление аватарки
+    if (avatarInput && avatarInput.files && avatarInput.files[0]) {
+      const file = avatarInput.files[0];
+      // Сохраняем в Firebase Storage (если есть), иначе в base64 (демо)
+      // Для демо: base64
+      const reader = new FileReader();
+      reader.onload = async function(evt) {
+        photoURL = evt.target.result;
+        await saveProfile(newName, newSocial, photoURL);
+      };
+      reader.readAsDataURL(file);
+      return;
+    } else {
+      await saveProfile(newName, newSocial, null);
+    }
+  };
+}
+
+async function saveProfile(newName, newSocial, photoURL) {
+  try {
     if (!newName) {
       alert('Имя не может быть пустым.');
       return;
     }
-    if (auth.currentUser.displayName === newName) {
-      editProfileForm.style.display = 'none';
-      editProfileBtn.style.display = '';
-      return;
+    const user = auth.currentUser;
+    if (!user) return;
+    let updateObj = { displayName: newName };
+    if (photoURL) updateObj.photoURL = photoURL;
+    await user.updateProfile(updateObj);
+    if (user.uid) {
+      await db.ref('users/' + user.uid + '/displayName').set(newName);
+      await db.ref('users/' + user.uid + '/social').set(newSocial);
+      if (photoURL) await db.ref('users/' + user.uid + '/photoURL').set(photoURL);
     }
-    try {
-      await auth.currentUser.updateProfile({ displayName: newName });
-      // Сохраняем имя в Firebase Realtime Database (users/uid/displayName)
-      if (auth.currentUser.uid) {
-        await db.ref('users/' + auth.currentUser.uid + '/displayName').set(newName);
-      }
-      renderProfileModal(auth.currentUser);
-      editProfileForm.style.display = 'none';
-      editProfileBtn.style.display = '';
-    } catch (e) {
-      alert('Ошибка: ' + e.message);
-    }
-  };
+    renderProfileModal(user);
+    editProfileForm.style.display = 'none';
+    editProfileBtn.style.display = '';
+  } catch (e) {
+    alert('Ошибка: ' + e.message);
+  }
 }
 
 // === Auth ===
