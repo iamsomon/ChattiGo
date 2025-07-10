@@ -38,9 +38,13 @@
       <button class="profile-close-btn" id="profileCloseBtn" title="Закрыть" style="position:absolute;top:12px;right:12px;background:#fff;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.13);border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;transition:box-shadow .18s;outline:none;z-index:1002;">
         <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" fill="#fff" stroke="#00B8D9" stroke-width="2.2"/><path d="M9.5 9.5l9 9M9.5 18.5l9-9" stroke="#00B8D9" stroke-width="2.4" stroke-linecap="round"/></svg>
       </button>
-      <div class="profile-avatar-wrap">
-        <div class="profile-avatar" id="profileAvatar">
+      <div class="profile-avatar-wrap" style="position:relative;display:flex;justify-content:center;align-items:center;">
+        <div class="profile-avatar" id="profileAvatar" style="cursor:pointer;position:relative;">
           <!-- Цветная аватарка, если есть фото, иначе SVG -->
+          <input type="file" id="editProfileAvatar" accept="image/*" style="display:none;" />
+          <div id="avatarOverlay" style="display:none;position:absolute;inset:0;background:rgba(0,184,217,0.18);backdrop-filter:blur(1.5px);border-radius:50%;align-items:center;justify-content:center;z-index:2;cursor:pointer;">
+            <svg width="38" height="38" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="19" fill="#fff" fill-opacity="0.7"/><path d="M19 11v16M11 19h16" stroke="#00B8D9" stroke-width="2.5" stroke-linecap="round"/></svg>
+          </div>
         </div>
       </div>
       <div class="profile-info">
@@ -60,10 +64,15 @@
         <form id="editProfileForm" class="edit-profile-form" style="display:none;flex-direction:column;align-items:center;gap:0.7em;margin-top:1em;width:100%;max-width:320px;">
           <label for="editProfileName" style="color:#00B8D9;font-weight:500;font-size:1.08em;margin-bottom:0.2em;align-self:flex-start;">Имя профиля</label>
           <input id="editProfileName" type="text" maxlength="32" placeholder="Введите имя" required style="padding:0.7em 1em;font-size:1.1em;border-radius:7px;border:1.5px solid #00B8D9;background:#181a1b;color:#fff;width:100%;outline:none;" />
-          <label for="editProfileAvatar" style="color:#00B8D9;font-weight:500;font-size:1.08em;margin-bottom:0.2em;align-self:flex-start;">Аватарка</label>
-          <input id="editProfileAvatar" type="file" accept="image/*" style="padding:0.5em 0;color:#fff;width:100%;background:none;border:none;" />
-          <label for="editProfileSocial" style="color:#00B8D9;font-weight:500;font-size:1.08em;margin-bottom:0.2em;align-self:flex-start;">Соцсети</label>
-          <input id="editProfileSocial" type="text" maxlength="128" placeholder="Ссылки через запятую (VK, Telegram...)" style="padding:0.7em 1em;font-size:1.1em;border-radius:7px;border:1.5px solid #00B8D9;background:#181a1b;color:#fff;width:100%;outline:none;" />
+          <div class="edit-socials-wrap" style="width:100%;display:flex;flex-direction:column;gap:0.5em;margin-top:0.7em;">
+            <div id="editSocialList" style="display:flex;flex-direction:column;gap:0.4em;"></div>
+            <div style="display:flex;align-items:center;gap:0.5em;">
+              <input id="editSocialInput" type="text" maxlength="64" placeholder="Добавить соцсеть (ссылка)" style="flex:1;padding:0.6em 1em;font-size:1em;border-radius:7px;border:1.5px solid #00B8D9;background:#181a1b;color:#fff;outline:none;" />
+              <button type="button" id="addSocialBtn" style="background:none;border:none;cursor:pointer;padding:0 0.3em;display:flex;align-items:center;">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#00B8D9" fill-opacity="0.13"/><path d="M14 8v12M8 14h12" stroke="#00B8D9" stroke-width="2.2" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+          </div>
           <button type="submit" class="profile-action-btn" style="background:#00B8D9;color:#fff;width:100%;margin-top:0.5em;">Сохранить</button>
           <button type="button" id="cancelEditProfileBtn" class="profile-action-btn" style="background:#232323;color:#fff;width:100%;">Отмена</button>
         </form>
