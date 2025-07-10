@@ -136,6 +136,11 @@ async function startLocalVideo() {
       alert('Ваш браузер не поддерживает getUserMedia.');
       return;
     }
+    // Проверка: хотя бы что-то должно быть включено
+    if (!camEnabled && !micEnabled) {
+      alert('Включите камеру или микрофон для начала общения.');
+      return;
+    }
     if (localStream) {
       localStream.getTracks().forEach(t => t.stop());
     }
