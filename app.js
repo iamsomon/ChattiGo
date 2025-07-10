@@ -90,7 +90,41 @@ function listenOnlineCount() {
 }
 
 
-// === UI: Профиль: открытие/закрытие модального окна, заполнение данных, выход ===
+
+// === UI: Профиль: отображение соцсетей в просмотре профиля ===
+function renderProfileSocialsView() {
+  const infoBlock = document.querySelector('.profile-info');
+  if (!infoBlock) return;
+  let socialsBlock = document.getElementById('profileSocialsView');
+  if (!socialsBlock) {
+    socialsBlock = document.createElement('div');
+    socialsBlock.id = 'profileSocialsView';
+    socialsBlock.style.display = 'flex';
+    socialsBlock.style.flexWrap = 'wrap';
+    socialsBlock.style.gap = '0.5em';
+    socialsBlock.style.marginTop = '0.7em';
+    infoBlock.appendChild(socialsBlock);
+  }
+  socialsBlock.innerHTML = '';
+  if (Array.isArray(socialLinks) && socialLinks.length) {
+    socialLinks.forEach(link => {
+      const a = document.createElement('a');
+      a.href = link;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.innerHTML = getSocialIcon(link);
+      a.title = link;
+      a.style.display = 'inline-flex';
+      a.style.alignItems = 'center';
+      a.style.justifyContent = 'center';
+      a.style.width = '32px';
+      a.style.height = '32px';
+      a.style.borderRadius = '50%';
+      a.style.background = 'rgba(0,184,217,0.08)';
+      socialsBlock.appendChild(a);
+    });
+  }
+}
 
 const profileBtn = document.getElementById('profileBtn');
 const profileModal = document.getElementById('profileModal');
@@ -101,12 +135,47 @@ const profileEmail = document.getElementById('profileEmail');
 const profileId = document.getElementById('profileId');
 const profileAvatar = document.getElementById('profileAvatar');
 
+
 const editProfileBtn = document.getElementById('editProfileBtn');
 const editProfileForm = document.getElementById('editProfileForm');
 const editProfileName = document.getElementById('editProfileName');
 const cancelEditProfileBtn = document.getElementById('cancelEditProfileBtn');
+const editSocialList = document.getElementById('editSocialList');
+const editSocialInput = document.getElementById('editSocialInput');
+const addSocialBtn = document.getElementById('addSocialBtn');
 
-function renderProfileModal(user) {
+// --- Соцсети: поддержка массива ссылок ---
+let socialLinks = [];
+function renderSocialList() {
+  if (!editSocialList) return;
+  editSocialList.innerHTML = '';
+  socialLinks.forEach((link, idx) => {
+    const div = document.createElement('div');
+    div.className = 'edit-social-item';
+    div.style.display = 'flex';
+    div.style.alignItems = 'center';
+    div.style.gap = '0.5em';
+    // SVG-иконка по ссылке
+    div.innerHTML = `${getSocialIcon(link)}<span style='flex:1;overflow:hidden;text-overflow:ellipsis;'>${link}</span><button type='button' data-idx='${idx}' style='background:none;border:none;cursor:pointer;padding:0 0.2em;'><svg width='20' height='20' viewBox='0 0 20 20' fill='none'><circle cx='10' cy='10' r='10' fill='#00B8D9' fill-opacity='0.13'/><path d='M6 6l8 8M6 14L14 6' stroke='#00B8D9' stroke-width='2.2' stroke-linecap='round'/></svg></button>`;
+    editSocialList.appendChild(div);
+    div.querySelector('button').onclick = () => {
+      socialLinks.splice(idx, 1);
+      renderSocialList();
+    };
+  });
+}
+
+function getSocialIcon(link) {
+  if (/vk.com/.test(link)) return `<svg width='20' height='20' viewBox='0 0 20 20'><circle cx='10' cy='10' r='10' fill='#2787F5'/><path d='M6.7 7.2c.1-.3.2-.5.6-.5h1.1c.2 0 .4.1.5.4.2.5.5 1.1.8 1.6.2.3.4.3.6 0 .2-.3.4-.7.6-1.1.1-.2.2-.4.5-.4h1.1c.4 0 .5.2.4.5-.2.7-.6 1.3-1.1 1.8-.2.2-.2.3 0 .5.4.4.8.8 1.2 1.2.3.3.2.6-.2.6h-1.1c-.3 0-.4-.1-.6-.3-.2-.3-.4-.6-.7-.9-.2-.2-.3-.2-.5 0-.2.3-.4.6-.7.9-.2.2-.3.3-.6.3H6.7c-.4 0-.5-.3-.2-.6.4-.4.8-.8 1.2-1.2.2-.2.2-.3 0-.5-.5-.5-.9-1.1-1.1-1.8z' fill='#fff'/></svg>`;
+  if (/t.me|telegram/.test(link)) return `<svg width='20' height='20' viewBox='0 0 20 20'><circle cx='10' cy='10' r='10' fill='#229ED9'/><path d='M15.6 5.7l-1.7 8c-.1.4-.3.5-.7.3l-2-1.5-1 .9c-.1.1-.2.2-.4.2l.1-1.3 4.2-3.8c.2-.2-.1-.3-.3-.2l-5.2 3.3-1.2-.4c-.4-.1-.4-.4.1-.6l8.1-3.1c.4-.2.7.1.6.5z' fill='#fff'/></svg>`;
+  if (/instagram/.test(link)) return `<svg width='20' height='20' viewBox='0 0 20 20'><circle cx='10' cy='10' r='10' fill='#E1306C'/><rect x='5.5' y='5.5' width='9' height='9' rx='2.5' fill='none' stroke='#fff' stroke-width='1.2'/><circle cx='10' cy='10' r='2.2' fill='none' stroke='#fff' stroke-width='1.2'/><circle cx='13.2' cy='6.8' r='0.7' fill='#fff'/></svg>`;
+  if (/facebook/.test(link)) return `<svg width='20' height='20' viewBox='0 0 20 20'><circle cx='10' cy='10' r='10' fill='#1877F3'/><path d='M11.7 10.7h1.1l.2-1.3h-1.3V8.3c0-.4.1-.6.6-.6h.7V6.5c-.1 0-.4-.1-.9-.1-1.1 0-1.6.6-1.6 1.6v.9H8.2v1.3h1.3v3.2h1.5v-3.2z' fill='#fff'/></svg>`;
+  if (/x.com|twitter/.test(link)) return `<svg width='20' height='20' viewBox='0 0 20 20'><circle cx='10' cy='10' r='10' fill='#000'/><path d='M6.5 6.5l7 7M13.5 6.5l-7 7' stroke='#fff' stroke-width='1.7' stroke-linecap='round'/></svg>`;
+  return `<svg width='20' height='20' viewBox='0 0 20 20'><circle cx='10' cy='10' r='10' fill='#00B8D9' fill-opacity='0.13'/><path d='M10 5v10M5 10h10' stroke='#00B8D9' stroke-width='2.2' stroke-linecap='round'/></svg>`;
+}
+
+
+async function renderProfileModal(user) {
   // Имя
   profileName.textContent = user.displayName || 'Пользователь';
   // Email
@@ -119,12 +188,33 @@ function renderProfileModal(user) {
     profileId.style.display = 'none';
   }
   // Аватар
-  if (user.photoURL) {
-    profileAvatar.innerHTML = `<img src="${user.photoURL}" alt="avatar" />`;
-  } else {
-    // SVG-аватарка (цветная, современная)
-    profileAvatar.innerHTML = `<svg width="72" height="72" viewBox="0 0 72 72" fill="none"><circle cx="36" cy="26" r="18" fill="#fff" stroke="#00B8D9" stroke-width="4"/><ellipse cx="36" cy="54" rx="25" ry="13" fill="#fff" stroke="#00B8D9" stroke-width="4"/><circle cx="36" cy="26" r="12" fill="#00B8D9" fill-opacity="0.18"/></svg>`;
+  let photoURL = user.photoURL;
+  // Чтение photoURL из базы, если есть
+  if (user.uid) {
+    const snap = await db.ref('users/' + user.uid + '/photoURL').once('value');
+    if (snap.exists() && snap.val()) photoURL = snap.val();
   }
+    if (photoURL) {
+      profileAvatar.innerHTML = `<img src="${photoURL}" alt="avatar" style="width:72px;height:72px;object-fit:cover;border-radius:50%;background:#fff;" />`;
+    } else {
+      profileAvatar.innerHTML = `<svg width="72" height="72" viewBox="0 0 72 72" fill="none"><circle cx="36" cy="26" r="18" fill="#fff" stroke="#00B8D9" stroke-width="4"/><ellipse cx="36" cy="54" rx="25" ry="13" fill="#fff" stroke="#00B8D9" stroke-width="4"/><circle cx="36" cy="26" r="12" fill="#00B8D9" fill-opacity="0.18"/></svg>`;
+    }
+  // Соцсети
+  if (user.uid) {
+    const snap = await db.ref('users/' + user.uid + '/social').once('value');
+    let val = snap.val();
+    if (Array.isArray(val)) {
+      socialLinks = val;
+    } else if (typeof val === 'string' && val) {
+      try { socialLinks = JSON.parse(val); } catch { socialLinks = [val]; }
+    } else {
+      socialLinks = [];
+    }
+  } else {
+    socialLinks = [];
+  }
+  renderSocialList();
+  renderProfileSocialsView();
 }
 
 
@@ -154,18 +244,26 @@ if (logoutProfileBtn) {
 }
 
 if (editProfileBtn && editProfileForm && editProfileName) {
-  editProfileBtn.onclick = () => {
+  editProfileBtn.onclick = async () => {
     if (!auth.currentUser) return;
     editProfileForm.style.display = 'flex';
     editProfileBtn.style.display = 'none';
     editProfileName.value = auth.currentUser.displayName || '';
-    // Соцсети
-    const socialInput = document.getElementById('editProfileSocial');
-    if (socialInput && auth.currentUser && auth.currentUser.uid) {
-      db.ref('users/' + auth.currentUser.uid + '/social').once('value', snap => {
-        socialInput.value = snap.val() || '';
-      });
+    // Соцсети из базы
+    if (auth.currentUser.uid) {
+      const snap = await db.ref('users/' + auth.currentUser.uid + '/social').once('value');
+      let val = snap.val();
+      if (Array.isArray(val)) {
+        socialLinks = val;
+      } else if (typeof val === 'string' && val) {
+        try { socialLinks = JSON.parse(val); } catch { socialLinks = [val]; }
+      } else {
+        socialLinks = [];
+      }
+    } else {
+      socialLinks = [];
     }
+    renderSocialList();
     editProfileName.focus();
   };
   if (cancelEditProfileBtn) {
@@ -174,32 +272,39 @@ if (editProfileBtn && editProfileForm && editProfileName) {
       editProfileBtn.style.display = '';
     };
   }
+  if (addSocialBtn && editSocialInput) {
+    addSocialBtn.onclick = () => {
+      const val = editSocialInput.value.trim();
+      if (val && !socialLinks.includes(val)) {
+        socialLinks.push(val);
+        renderSocialList();
+        editSocialInput.value = '';
+      }
+    };
+  }
   editProfileForm.onsubmit = async (e) => {
     e.preventDefault();
     const newName = editProfileName.value.trim();
-    const socialInput = document.getElementById('editProfileSocial');
-    const newSocial = socialInput ? socialInput.value.trim() : '';
     const avatarInput = document.getElementById('editProfileAvatar');
     let photoURL = null;
     // Обновление аватарки
     if (avatarInput && avatarInput.files && avatarInput.files[0]) {
       const file = avatarInput.files[0];
-      // Сохраняем в Firebase Storage (если есть), иначе в base64 (демо)
-      // Для демо: base64
+      // Для демо: base64 (можно заменить на Storage)
       const reader = new FileReader();
       reader.onload = async function(evt) {
         photoURL = evt.target.result;
-        await saveProfile(newName, newSocial, photoURL);
+        await saveProfile(newName, socialLinks, photoURL);
       };
       reader.readAsDataURL(file);
       return;
     } else {
-      await saveProfile(newName, newSocial, null);
+      await saveProfile(newName, socialLinks, null);
     }
   };
 }
 
-async function saveProfile(newName, newSocial, photoURL) {
+async function saveProfile(newName, newSocialArr, photoURL) {
   try {
     if (!newName) {
       alert('Имя не может быть пустым.');
@@ -212,10 +317,10 @@ async function saveProfile(newName, newSocial, photoURL) {
     await user.updateProfile(updateObj);
     if (user.uid) {
       await db.ref('users/' + user.uid + '/displayName').set(newName);
-      await db.ref('users/' + user.uid + '/social').set(newSocial);
+      await db.ref('users/' + user.uid + '/social').set(newSocialArr);
       if (photoURL) await db.ref('users/' + user.uid + '/photoURL').set(photoURL);
     }
-    renderProfileModal(user);
+    await renderProfileModal(user);
     editProfileForm.style.display = 'none';
     editProfileBtn.style.display = '';
   } catch (e) {
