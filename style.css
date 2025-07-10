@@ -1,3 +1,90 @@
+/* --- Профиль: модальное окно --- */
+.profile-modal-content {
+  background: #232323;
+  color: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 48px 0 rgba(0,0,0,0.28);
+  padding: 2.5em 2em 2em 2em;
+  min-width: 340px;
+  min-height: 340px;
+  max-width: 96vw;
+  max-height: 96vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2em;
+}
+.profile-avatar-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #181a1b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.12);
+  margin-bottom: 0.5em;
+}
+.profile-info {
+  text-align: center;
+  margin-bottom: 0.5em;
+}
+.profile-name {
+  font-size: 1.25em;
+  font-weight: 700;
+  margin-bottom: 0.2em;
+}
+.profile-email {
+  font-size: 1em;
+  color: #aaa;
+}
+.profile-actions {
+  display: flex;
+  gap: 1.2em;
+  margin-top: 1.2em;
+}
+.profile-action-btn {
+  background: #232323;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7em 1.4em;
+  font-size: 1.08em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.08);
+}
+.profile-action-btn svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+.profile-action-btn.danger {
+  background: #FF3B30;
+  color: #fff;
+}
+.profile-close-btn:hover { opacity: 1 !important; }
+@media (max-width: 600px) {
+  .profile-modal-content {
+    min-width: 0;
+    width: 98vw;
+    padding: 1.2em 0.5em 1.2em 0.5em;
+    border-radius: 14px;
+  }
+  .profile-avatar { width: 56px; height: 56px; }
+  .profile-actions { flex-direction: column; gap: 0.7em; width: 100%; }
+  .profile-action-btn { width: 100%; justify-content: center; }
+}
 body:not(.split-mode) .remote-video {
   object-fit: contain;
   background: #000;
@@ -28,18 +115,13 @@ body:not(.split-mode) .remote-video {
   opacity: 0;
   pointer-events: none;
 }
-.search-spinner {
-  width: 38px;
-  height: 38px;
-  border: 4px solid #444;
-  border-top: 4px solid #007aff;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+.search-svg-spinner {
   margin-bottom: 18px;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  width: 72px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .search-text {
   color: #fff;

@@ -89,10 +89,39 @@ function listenOnlineCount() {
   });
 }
 
-// === UI: Выход из профиля ===
-const logoutBtn = document.getElementById('logoutBtn');
-if (logoutBtn) {
-  logoutBtn.onclick = () => auth.signOut();
+
+// === UI: Профиль: открытие/закрытие модального окна, заполнение данных, выход ===
+const profileBtn = document.getElementById('profileBtn');
+const profileModal = document.getElementById('profileModal');
+const profileCloseBtn = document.getElementById('profileCloseBtn');
+const logoutProfileBtn = document.getElementById('logoutProfileBtn');
+const profileName = document.getElementById('profileName');
+const profileEmail = document.getElementById('profileEmail');
+const editProfileBtn = document.getElementById('editProfileBtn');
+
+if (profileBtn && profileModal) {
+  profileBtn.onclick = () => {
+    // Заполнить имя и email
+    if (auth.currentUser) {
+      profileName.textContent = auth.currentUser.displayName || 'Пользователь';
+      profileEmail.textContent = auth.currentUser.email || 'Аноним';
+    }
+    profileModal.classList.remove('hidden');
+  };
+}
+if (profileCloseBtn && profileModal) {
+  profileCloseBtn.onclick = () => profileModal.classList.add('hidden');
+}
+if (logoutProfileBtn) {
+  logoutProfileBtn.onclick = () => {
+    profileModal.classList.add('hidden');
+    auth.signOut();
+  };
+}
+if (editProfileBtn) {
+  editProfileBtn.onclick = () => {
+    alert('Редактирование профиля будет доступно в будущих обновлениях.');
+  };
 }
 
 // === Auth ===
