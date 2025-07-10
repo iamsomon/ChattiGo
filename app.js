@@ -127,16 +127,24 @@ function renderProfileModal(user) {
   }
 }
 
+
 if (profileBtn && profileModal) {
   profileBtn.onclick = () => {
     if (auth.currentUser) {
       renderProfileModal(auth.currentUser);
     }
     profileModal.classList.remove('hidden');
+    // Фокус на крестик для доступности
+    if (profileCloseBtn) profileCloseBtn.focus();
   };
 }
 if (profileCloseBtn && profileModal) {
   profileCloseBtn.onclick = () => profileModal.classList.add('hidden');
+}
+// Закрытие профиля по клику на overlay
+const profileModalOverlay = document.getElementById('profileModalOverlay');
+if (profileModalOverlay && profileModal) {
+  profileModalOverlay.onclick = () => profileModal.classList.add('hidden');
 }
 if (logoutProfileBtn) {
   logoutProfileBtn.onclick = () => {
@@ -201,21 +209,60 @@ auth.onAuthStateChanged(async user => {
   listenOnlineCount();
 });
 
-document.getElementById('authForm').onsubmit = async e => {
-  e.preventDefault();
-  const email = document.getElementById('authEmail').value;
-  const pass = document.getElementById('authPass').value;
-  try { await auth.signInWithEmailAndPassword(email, pass); } catch (err) { alert(err.message); }
-};
-document.getElementById('regBtn').onclick = async () => {
-  const email = document.getElementById('authEmail').value;
-  const pass = document.getElementById('authPass').value;
-  try { await auth.createUserWithEmailAndPassword(email, pass); } catch (err) { alert(err.message); }
-};
-document.getElementById('googleBtn').onclick = async () => {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  try { await auth.signInWithPopup(provider); } catch (err) { alert(err.message); }
-};
+
+// --- Логин ---
+const authForm = document.getElementById('authForm');
+const regForm = document.getElementById('regForm');
+const regBtn = document.getElementById('regBtn');
+const backToLoginBtn = document.getElementById('backToLoginBtn');
+const googleBtn = document.getElementById('googleBtn');
+const googleRegBtn = document.getElementById('googleRegBtn');
+
+if (authForm && regForm && regBtn && backToLoginBtn && googleBtn && googleRegBtn) {
+  // Показать форму регистрации
+  regBtn.onclick = () => {
+    authForm.style.display = 'none';
+    regForm.style.display = 'flex';
+  };
+  // Назад к логину
+  backToLoginBtn.onclick = () => {
+    regForm.style.display = 'none';
+    authForm.style.display = 'flex';
+  };
+  // Логин
+  authForm.onsubmit = async e => {
+    e.preventDefault();
+    const email = document.getElementById('authEmail').value;
+    const pass = document.getElementById('authPass').value;
+    try { await auth.signInWithEmailAndPassword(email, pass); } catch (err) { alert(err.message); }
+  };
+  // Регистрация
+  regForm.onsubmit = async e => {
+    e.preventDefault();
+    const email = document.getElementById('regEmail').value;
+    const pass = document.getElementById('regPass').value;
+    const name = document.getElementById('regName').value;
+    try {
+      const userCred = await auth.createUserWithEmailAndPassword(email, pass);
+      await userCred.user.updateProfile({ displayName: name });
+      if (userCred.user.uid) {
+        await db.ref('users/' + userCred.user.uid + '/displayName').set(name);
+      }
+      regForm.style.display = 'none';
+      authForm.style.display = 'flex';
+    } catch (err) { alert(err.message); }
+  };
+  // Google вход
+  googleBtn.onclick = async () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    try { await auth.signInWithPopup(provider); } catch (err) { alert(err.message); }
+  };
+  // Google регистрация (то же самое)
+  googleRegBtn.onclick = async () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    try { await auth.signInWithPopup(provider); } catch (err) { alert(err.message); }
+  };
+}
 
 // === Video ===
 async function startLocalVideo() {
