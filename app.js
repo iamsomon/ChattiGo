@@ -100,7 +100,11 @@ const profileName = document.getElementById('profileName');
 const profileEmail = document.getElementById('profileEmail');
 const profileId = document.getElementById('profileId');
 const profileAvatar = document.getElementById('profileAvatar');
+
 const editProfileBtn = document.getElementById('editProfileBtn');
+const editProfileForm = document.getElementById('editProfileForm');
+const editProfileName = document.getElementById('editProfileName');
+const cancelEditProfileBtn = document.getElementById('cancelEditProfileBtn');
 
 function renderProfileModal(user) {
   // Имя
@@ -140,17 +144,44 @@ if (logoutProfileBtn) {
     auth.signOut();
   };
 }
-if (editProfileBtn) {
+
+if (editProfileBtn && editProfileForm && editProfileName) {
   editProfileBtn.onclick = () => {
     if (!auth.currentUser) return;
-    // Пример: простое редактирование имени через prompt
-    const newName = prompt('Введите новое имя профиля:', auth.currentUser.displayName || '');
-    if (newName && newName.trim() && newName !== auth.currentUser.displayName) {
-      auth.currentUser.updateProfile({ displayName: newName.trim() })
-        .then(() => {
-          renderProfileModal(auth.currentUser);
-        })
-        .catch(e => alert('Ошибка: ' + e.message));
+    editProfileForm.style.display = 'flex';
+    editProfileBtn.style.display = 'none';
+    editProfileName.value = auth.currentUser.displayName || '';
+    editProfileName.focus();
+  };
+  if (cancelEditProfileBtn) {
+    cancelEditProfileBtn.onclick = () => {
+      editProfileForm.style.display = 'none';
+      editProfileBtn.style.display = '';
+    };
+  }
+  editProfileForm.onsubmit = async (e) => {
+    e.preventDefault();
+    const newName = editProfileName.value.trim();
+    if (!newName) {
+      alert('Имя не может быть пустым.');
+      return;
+    }
+    if (auth.currentUser.displayName === newName) {
+      editProfileForm.style.display = 'none';
+      editProfileBtn.style.display = '';
+      return;
+    }
+    try {
+      await auth.currentUser.updateProfile({ displayName: newName });
+      // Сохраняем имя в Firebase Realtime Database (users/uid/displayName)
+      if (auth.currentUser.uid) {
+        await db.ref('users/' + auth.currentUser.uid + '/displayName').set(newName);
+      }
+      renderProfileModal(auth.currentUser);
+      editProfileForm.style.display = 'none';
+      editProfileBtn.style.display = '';
+    } catch (e) {
+      alert('Ошибка: ' + e.message);
     }
   };
 }
@@ -180,9 +211,6 @@ document.getElementById('regBtn').onclick = async () => {
   const email = document.getElementById('authEmail').value;
   const pass = document.getElementById('authPass').value;
   try { await auth.createUserWithEmailAndPassword(email, pass); } catch (err) { alert(err.message); }
-};
-document.getElementById('anonBtn').onclick = async () => {
-  try { await auth.signInAnonymously(); } catch (err) { alert(err.message); }
 };
 document.getElementById('googleBtn').onclick = async () => {
   const provider = new firebase.auth.GoogleAuthProvider();

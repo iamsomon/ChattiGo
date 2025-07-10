@@ -51,6 +51,12 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20h4.5l10-10.1a2.1 2.1 0 0 0-3-3L5.5 17V20z" stroke="#00B8D9" stroke-width="2"/><path d="M14.5 6.5l3 3" stroke="#00B8D9" stroke-width="2"/></svg>
           Редактировать
         </button>
+        <form id="editProfileForm" class="edit-profile-form" style="display:none;flex-direction:column;align-items:center;gap:0.7em;margin-top:1em;width:100%;max-width:320px;">
+          <label for="editProfileName" style="color:#00B8D9;font-weight:500;font-size:1.08em;margin-bottom:0.2em;align-self:flex-start;">Имя профиля</label>
+          <input id="editProfileName" type="text" maxlength="32" placeholder="Введите имя" required style="padding:0.7em 1em;font-size:1.1em;border-radius:7px;border:1.5px solid #00B8D9;background:#181a1b;color:#fff;width:100%;outline:none;" />
+          <button type="submit" class="profile-action-btn" style="background:#00B8D9;color:#fff;width:100%;margin-top:0.5em;">Сохранить</button>
+          <button type="button" id="cancelEditProfileBtn" class="profile-action-btn" style="background:#232323;color:#fff;width:100%;">Отмена</button>
+        </form>
         <button id="logoutProfileBtn" class="profile-action-btn danger">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M16 17l5-5-5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="5" width="6" height="14" rx="2" stroke="#fff" stroke-width="2"/></svg>
           Выйти
@@ -125,13 +131,10 @@
       <form id="authForm" class="auth-form">
         <input id="authEmail" type="email" placeholder="Email" required autocomplete="username">
         <input id="authPass" type="password" placeholder="Пароль" required autocomplete="current-password">
-        <div class="auth-btns">
-          <button type="submit" class="btn primary">Войти</button>
-          <button type="button" id="regBtn" class="btn secondary">Регистрация</button>
-        </div>
-        <div class="auth-btns">
-          <button type="button" id="anonBtn" class="btn secondary">Анонимно</button>
-          <button type="button" id="googleBtn" class="btn google">Google</button>
+        <div class="auth-btns" style="display:flex;flex-direction:column;gap:0.7em;width:100%;margin-top:0.7em;">
+          <button type="submit" class="btn primary" style="width:100%;">Войти</button>
+          <button type="button" id="regBtn" class="btn secondary" style="width:100%;">Регистрация</button>
+          <button type="button" id="googleBtn" class="btn google" style="width:100%;">Google</button>
         </div>
       </form>
     </div>
