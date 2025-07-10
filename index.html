@@ -22,13 +22,13 @@
       <span id="onlineCount">0</span>
     </h1>
     <div style="flex:1;"></div>
-    <button id="profileBtn" title="Профиль" style="margin-left:auto;background:none;border:none;cursor:pointer;">
-      <!-- Новая иконка профиля (2025, узнаваемая, современная, цветная) -->
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="16" cy="11.5" r="6.5" fill="#fff" stroke="#00B8D9" stroke-width="2.2"/>
-        <circle cx="16" cy="11.5" r="4.5" fill="#00B8D9" fill-opacity="0.18"/>
-        <ellipse cx="16" cy="23.5" rx="10" ry="6.5" fill="#fff" stroke="#00B8D9" stroke-width="2.2"/>
-        <ellipse cx="16" cy="23.5" rx="7.5" ry="4.5" fill="#00B8D9" fill-opacity="0.13"/>
+    <button id="profileBtn" title="Профиль" style="margin-left:auto;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;width:38px;height:38px;border-radius:50%;transition:box-shadow .18s;box-shadow:0 2px 8px rgba(0,0,0,0.10);">
+      <!-- Минималистичная иконка профиля (2025, круг, user, цвет) -->
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="15" fill="#fff" stroke="#00B8D9" stroke-width="2"/>
+        <circle cx="16" cy="13" r="5" fill="#00B8D9" fill-opacity="0.18"/>
+        <circle cx="16" cy="13" r="3" fill="#00B8D9"/>
+        <ellipse cx="16" cy="23" rx="7" ry="4" fill="#00B8D9" fill-opacity="0.10"/>
       </svg>
     </button>
   <!-- Модальное окно профиля -->
@@ -48,21 +48,25 @@
         <div class="profile-email" id="profileEmail">email@example.com</div>
         <div class="profile-id" id="profileId" style="font-size:0.92em;color:#4fd1c5;margin-top:0.2em;display:none;"></div>
       </div>
-      <div class="profile-actions">
-        <button id="editProfileBtn" class="profile-action-btn">
+      <div class="profile-actions" style="display:flex;flex-direction:column;align-items:center;gap:0.7em;width:100%;max-width:320px;margin:0 auto;">
+        <button id="editProfileBtn" class="profile-action-btn" style="width:100%;">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20h4.5l10-10.1a2.1 2.1 0 0 0-3-3L5.5 17V20z" stroke="#00B8D9" stroke-width="2"/><path d="M14.5 6.5l3 3" stroke="#00B8D9" stroke-width="2"/></svg>
           Редактировать
+        </button>
+        <button id="logoutProfileBtn" class="profile-action-btn danger" style="width:100%;margin-top:0.2em;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M16 17l5-5-5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="5" width="6" height="14" rx="2" stroke="#fff" stroke-width="2"/></svg>
+          Выйти
         </button>
         <form id="editProfileForm" class="edit-profile-form" style="display:none;flex-direction:column;align-items:center;gap:0.7em;margin-top:1em;width:100%;max-width:320px;">
           <label for="editProfileName" style="color:#00B8D9;font-weight:500;font-size:1.08em;margin-bottom:0.2em;align-self:flex-start;">Имя профиля</label>
           <input id="editProfileName" type="text" maxlength="32" placeholder="Введите имя" required style="padding:0.7em 1em;font-size:1.1em;border-radius:7px;border:1.5px solid #00B8D9;background:#181a1b;color:#fff;width:100%;outline:none;" />
+          <label for="editProfileAvatar" style="color:#00B8D9;font-weight:500;font-size:1.08em;margin-bottom:0.2em;align-self:flex-start;">Аватарка</label>
+          <input id="editProfileAvatar" type="file" accept="image/*" style="padding:0.5em 0;color:#fff;width:100%;background:none;border:none;" />
+          <label for="editProfileSocial" style="color:#00B8D9;font-weight:500;font-size:1.08em;margin-bottom:0.2em;align-self:flex-start;">Соцсети</label>
+          <input id="editProfileSocial" type="text" maxlength="128" placeholder="Ссылки через запятую (VK, Telegram...)" style="padding:0.7em 1em;font-size:1.1em;border-radius:7px;border:1.5px solid #00B8D9;background:#181a1b;color:#fff;width:100%;outline:none;" />
           <button type="submit" class="profile-action-btn" style="background:#00B8D9;color:#fff;width:100%;margin-top:0.5em;">Сохранить</button>
           <button type="button" id="cancelEditProfileBtn" class="profile-action-btn" style="background:#232323;color:#fff;width:100%;">Отмена</button>
         </form>
-        <button id="logoutProfileBtn" class="profile-action-btn danger">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M16 17l5-5-5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="5" width="6" height="14" rx="2" stroke="#fff" stroke-width="2"/></svg>
-          Выйти
-        </button>
       </div>
     </div>
   </div>
