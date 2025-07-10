@@ -23,8 +23,12 @@
     </h1>
     <div style="flex:1;"></div>
     <button id="profileBtn" title="Профиль" style="margin-left:auto;background:none;border:none;cursor:pointer;">
-      <!-- Современная иконка профиля (2025) -->
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4.2" stroke="currentColor" stroke-width="2.1"/><path d="M3.5 20c0-3.2 5-5.2 8.5-5.2s8.5 2 8.5 5.2" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>
+      <!-- Новая иконка профиля (2025, цветная, современная) -->
+      <svg width="32" height="32" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="18" r="10" fill="#fff" stroke="#00B8D9" stroke-width="3"/>
+        <ellipse cx="24" cy="36" rx="14" ry="8" fill="#fff" stroke="#00B8D9" stroke-width="3"/>
+        <circle cx="24" cy="18" r="7" fill="#00B8D9" fill-opacity="0.18"/>
+      </svg>
     </button>
   <!-- Модальное окно профиля -->
   <div id="profileModal" class="modal hidden">
@@ -33,21 +37,22 @@
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M6 18L18 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
       </button>
       <div class="profile-avatar-wrap">
-        <div class="profile-avatar">
-          <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="24" r="16" fill="#232323" stroke="#007aff" stroke-width="3"/><ellipse cx="32" cy="48" rx="20" ry="10" fill="#232323" stroke="#007aff" stroke-width="3"/></svg>
+        <div class="profile-avatar" id="profileAvatar">
+          <!-- Цветная аватарка, если есть фото, иначе SVG -->
         </div>
       </div>
       <div class="profile-info">
         <div class="profile-name" id="profileName">Пользователь</div>
         <div class="profile-email" id="profileEmail">email@example.com</div>
+        <div class="profile-id" id="profileId" style="font-size:0.92em;color:#4fd1c5;margin-top:0.2em;display:none;"></div>
       </div>
       <div class="profile-actions">
         <button id="editProfileBtn" class="profile-action-btn">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20h4.5l10-10.1a2.1 2.1 0 0 0-3-3L5.5 17V20z" stroke="currentColor" stroke-width="2"/><path d="M14.5 6.5l3 3" stroke="currentColor" stroke-width="2"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20h4.5l10-10.1a2.1 2.1 0 0 0-3-3L5.5 17V20z" stroke="#00B8D9" stroke-width="2"/><path d="M14.5 6.5l3 3" stroke="#00B8D9" stroke-width="2"/></svg>
           Редактировать
         </button>
         <button id="logoutProfileBtn" class="profile-action-btn danger">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M16 17l5-5-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="5" width="6" height="14" rx="2" stroke="currentColor" stroke-width="2"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M16 17l5-5-5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="5" width="6" height="14" rx="2" stroke="#fff" stroke-width="2"/></svg>
           Выйти
         </button>
       </div>

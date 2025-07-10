@@ -22,15 +22,29 @@
   margin-bottom: 0.5em;
 }
 .profile-avatar {
-  width: 72px;
-  height: 72px;
+  width: 84px;
+  height: 84px;
   border-radius: 50%;
-  background: #181a1b;
+  background: linear-gradient(135deg, #00B8D9 0%, #4fd1c5 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.12);
+  box-shadow: 0 4px 24px 0 rgba(0,184,217,0.18);
   margin-bottom: 0.5em;
+  overflow: hidden;
+  position: relative;
+}
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+.profile-avatar svg {
+  width: 72px;
+  height: 72px;
+  display: block;
 }
 .profile-info {
   text-align: center;
