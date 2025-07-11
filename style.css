@@ -312,7 +312,7 @@ body:not(.split-mode) .remote-video {
 .more-menu .control-btn:active, .more-menu .control-btn:hover {
   opacity: 1;
 }
-html, body {
+.html, body {
   min-height: 100vh;
   min-width: 100vw;
   background: #181a1b !important;
@@ -323,7 +323,6 @@ html, body {
   user-select: none;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-}
 }
 .app-container {
   width: 100vw;
@@ -343,7 +342,6 @@ html, body {
   justify-content: center;
   min-height: 60vh;
 }
-  opacity: 1;
 .info-section {
   background: #181a1b;
   color: #fff;
