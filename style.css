@@ -620,13 +620,18 @@ body:not(.split-mode) .local-video {
 
 @media (max-width: 600px) {
   .call-controls {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
     width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 12px;
-    padding-bottom: 1.2em;
-    background: none !important;
+    padding: 0.7em 0 0.7em 0;
+    background: #181a1b;
+    box-shadow: 0 -2px 16px 0 rgba(0,0,0,0.12);
     z-index: 2000;
     margin: 0;
   }
