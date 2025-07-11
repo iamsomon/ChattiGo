@@ -1,3 +1,31 @@
+// === Гамбургер-меню для мобильного хедера ===
+document.addEventListener('DOMContentLoaded', function() {
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const headerMenu = document.getElementById('headerMenu');
+  if (hamburgerBtn && headerMenu) {
+    hamburgerBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      headerMenu.classList.toggle('open');
+      hamburgerBtn.classList.toggle('open');
+    });
+    // Закрытие меню при клике вне меню
+    document.addEventListener('click', function(e) {
+      if (headerMenu.classList.contains('open')) {
+        if (!headerMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+          headerMenu.classList.remove('open');
+          hamburgerBtn.classList.remove('open');
+        }
+      }
+    });
+    // Закрытие меню при клике на ссылку
+    headerMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', function() {
+        headerMenu.classList.remove('open');
+        hamburgerBtn.classList.remove('open');
+      });
+    });
+  }
+});
 console.log('app.js loaded');
 // === Firebase config ===
 const firebaseConfig = {

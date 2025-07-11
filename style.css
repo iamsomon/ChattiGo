@@ -455,17 +455,24 @@ body.split-mode .local-video {
 }
 
 /* --- call-controls поверх всего, без перекрытий --- */
+
+/* --- call-controls фиксированы внизу на всех экранах --- */
 .call-controls {
-  position: static;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 16px;
-  background: none;
+  background: #181a1b;
+  box-shadow: 0 -2px 16px 0 rgba(0,0,0,0.12);
   pointer-events: auto;
   z-index: 2000;
   margin: 0;
+  padding: 0.7em 0 0.7em 0;
 }
 
 @media (max-width: 600px) {
@@ -620,26 +627,90 @@ body:not(.split-mode) .local-video {
 
 @media (max-width: 600px) {
   .call-controls {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     gap: 12px;
     padding: 0.7em 0 0.7em 0;
-    background: #181a1b;
-    box-shadow: 0 -2px 16px 0 rgba(0,0,0,0.12);
-    z-index: 2000;
-    margin: 0;
   }
   .control-btn {
     min-width: 44px;
     min-height: 44px;
     font-size: 1.2em;
   }
+  /* Ограничение ширины сервиса */
+  .app-container, .info-section, .sticky-header {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+}
+/* --- Гамбургер-меню для мобильного хедера --- */
+.hamburger {
+  display: none;
+  width: 38px;
+  height: 38px;
+  background: none;
+  border: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 3000;
+}
+.hamburger span {
+  display: block;
+  width: 28px;
+  height: 4px;
+  margin: 4px 0;
+  background: #fff;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+@media (max-width: 600px) {
+  .hamburger {
+    display: flex;
+    position: absolute;
+    left: 12px;
+    top: 8px;
+  }
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 1002;
+    background: #181a1b;
+    height: 54px;
+    min-height: 54px;
+    max-height: 54px;
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    border-radius: 0;
+    margin: 0;
+    overflow: visible;
+  }
+  .header-menu {
+    display: none;
+    position: absolute;
+    top: 54px;
+    left: 0;
+    width: 100vw;
+    background: #232323;
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
+    flex-direction: column;
+    align-items: stretch;
+    z-index: 2500;
+    border-radius: 0 0 18px 18px;
+    animation: menuSlideDown 0.25s;
+  }
+  .header-menu.open {
+    display: flex;
+  }
+}
+@keyframes menuSlideDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .control-btn {
@@ -964,12 +1035,36 @@ body:not(.split-mode) .local-video {
 
 @media (max-width: 600px) {
   .local-video {
-    width: 120px;
-    height: 180px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: 100vw;
+    max-width: 100vw;
+    max-height: 60vh;
+    min-width: 0;
+    min-height: 180px;
     aspect-ratio: 9/16;
     border-radius: 10px;
     object-fit: cover;
-    transform: none;
+    z-index: 2;
+  }
+  .remote-video {
+    width: 100vw;
+    height: 100vw;
+    max-width: 100vw;
+    max-height: 60vh;
+    min-width: 0;
+    min-height: 180px;
+    object-fit: cover;
+    border-radius: 0 !important;
+    display: block;
+    position: relative;
+    z-index: 1;
+  }
+  .info-section {
+    display: none;
   }
   .call-controls { gap: 12px; }
   .control-btn { width: 44px; height: 44px; font-size: 18px; }
