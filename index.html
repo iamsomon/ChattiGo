@@ -67,7 +67,8 @@
   </header>
   <!-- ...удалён дублирующийся блок main-video-area с видео и чатом... -->
 
-  <!-- Кнопки управления теперь внутри .main-video-area, над .video-container -->
+  <div class="main-video-area" style="display:flex;flex-direction:column;position:relative;">
+  <!-- Кнопки управления теперь после .main-video-area, чтобы быть видимыми только в разделе камер -->
   <div class="call-controls">
     <button id="micBtn" class="control-btn" aria-pressed="true" title="Микрофон">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="10" y="5" width="8" height="14" rx="4" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="8" y="19" width="12" height="3" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="13" y="22" width="2" height="3" rx="1" fill="currentColor"/></svg>
@@ -88,7 +89,6 @@
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="16" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
     </button>
   </div>
-  <div class="main-video-area" style="display:flex;flex-direction:column;position:relative;">
     <div class="app-container">
       <div class="video-container">
         <div class="remote-video-wrap">
