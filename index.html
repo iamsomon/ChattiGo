@@ -43,18 +43,18 @@
         <div class="profile-email" id="profileEmail" style="font-size:1.08em;color:#00B8D9;font-weight:500;">email@example.com</div>
         <div class="profile-id" id="profileId" style="font-size:0.92em;color:#4fd1c5;margin-top:0.2em;">ID: ...</div>
       </div>
-      <div class="profile-gender-lang" style="display:flex;gap:1em;justify-content:center;margin:1em 0 0.5em 0;">
-        <div class="gender-select" style="display:flex;align-items:center;gap:0.5em;">
-          <label for="profileGender" style="color:#00B8D9;font-weight:500;">Gender:</label>
-          <select id="profileGender" style="padding:0.3em 2.2em 0.3em 2em;border-radius:7px;border:1.5px solid #00B8D9;background:#181a1b;color:#fff;font-size:1em;">
+      <div class="profile-gender-lang">
+        <div class="gender-select">
+          <label for="profileGender">Gender:</label>
+          <select id="profileGender">
             <option value="male">&#9794; Male</option>
             <option value="female">&#9792; Female</option>
             <option value="other">&#9895; Other</option>
           </select>
         </div>
-        <div class="lang-select" style="display:flex;align-items:center;gap:0.5em;">
-          <label for="profileLang" style="color:#00B8D9;font-weight:500;">Language:</label>
-          <select id="profileLang" style="padding:0.3em 1.2em 0.3em 1em;border-radius:7px;border:1.5px solid #00B8D9;background:#181a1b;color:#fff;font-size:1em;">
+        <div class="lang-select">
+          <label for="profileLang">Language:</label>
+          <select id="profileLang">
             <option value="en">English</option>
             <option value="ru">Русский</option>
           </select>
@@ -145,8 +145,8 @@
   </div>
 
   <!-- Информационный блок с хеддером и секциями -->
-  <div class="info-section" style="min-height:100vh;background:#181a1b;color:#fff;">
-    <header class="sticky-header" style="position:sticky;top:0;z-index:1002;background:#181a1b;padding:1.2em 0 0.7em 0;box-shadow:0 2px 8px rgba(0,0,0,0.10);display:flex;gap:2em;justify-content:center;align-items:center;">
+  <div class="info-section">
+    <header class="sticky-header">
       <nav style="display:flex;gap:2em;">
         <a href="#about" style="color:#00B8D9;font-weight:600;text-decoration:none;font-size:1.1em;">About</a>
         <a href="#rules" style="color:#00B8D9;font-weight:600;text-decoration:none;font-size:1.1em;">Rules</a>
