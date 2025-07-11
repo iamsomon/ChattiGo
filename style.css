@@ -179,37 +179,30 @@
   border-radius: 18px;
 }
 
+/* --- sticky-header и call-controls как единый sticky-bar --- */
 .sticky-header {
   position: sticky;
   top: 0;
   z-index: 1002;
   background: #181a1b;
-  height: 64px;
-  min-height: 64px;
-  max-height: 64px;
-  padding: 0;
+  padding: 0 0.5em;
   box-shadow: 0 2px 8px rgba(0,0,0,0.10);
   display: flex;
-  gap: 2em;
-  justify-content: center;
+  flex-direction: row;
   align-items: center;
   width: 100%;
   min-width: 0;
   border-radius: 0;
   margin: 0;
+  height: 64px;
+  gap: 1.5em;
 }
 
 @media (max-width: 800px) {
   .sticky-header {
-    width: 100%;
-    min-width: 0;
     height: 54px;
-    min-height: 54px;
-    max-height: 54px;
-    padding-left: 0;
-    padding-right: 0;
-    border-radius: 0;
-    margin: 0;
+    gap: 0.7em;
+    padding: 0 0.2em;
   }
 }
 @media (max-width: 600px) {
@@ -220,19 +213,20 @@
     border-radius: 0;
   }
   .sticky-header {
-    gap: 1em;
-    padding: 0;
-    width: 100%;
-    min-width: 0;
     height: 54px;
-    min-height: 54px;
-    max-height: 54px;
-    border-radius: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+    gap: 0.5em;
+    padding: 0 0.1em;
+  }
+  .call-controls {
+    gap: 8px;
+    margin: 0 0 0 0.2em;
+  }
+  .control-btn {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    min-height: 38px;
+    font-size: 1em;
   }
 }
 body:not(.split-mode) .remote-video {
@@ -461,13 +455,14 @@ body.split-mode .local-video {
   position: static;
   width: auto;
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 16px;
   background: none;
   pointer-events: auto;
   z-index: 1;
-  margin: 0 0 0 2em;
+  margin: 0 0 0 1.2em;
   padding: 0;
 }
 
