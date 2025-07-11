@@ -130,10 +130,11 @@ const profileBtn = document.getElementById('profileBtn');
 const profileModal = document.getElementById('profileModal');
 const profileCloseBtn = document.getElementById('profileCloseBtn');
 const logoutProfileBtn = document.getElementById('logoutProfileBtn');
-const profileName = document.getElementById('profileName');
+
 const profileEmail = document.getElementById('profileEmail');
 const profileId = document.getElementById('profileId');
-const profileAvatar = document.getElementById('profileAvatar');
+const profileGender = document.getElementById('profileGender');
+const profileLang = document.getElementById('profileLang');
 
 
 const editProfileBtn = document.getElementById('editProfileBtn');
@@ -175,9 +176,8 @@ function getSocialIcon(link) {
 }
 
 
+
 async function renderProfileModal(user) {
-  // Имя
-  profileName.textContent = user.displayName || 'Пользователь';
   // Email
   profileEmail.textContent = user.email || 'Аноним';
   // UID
@@ -187,18 +187,19 @@ async function renderProfileModal(user) {
   } else {
     profileId.style.display = 'none';
   }
-  // Аватар
-  let photoURL = user.photoURL;
-  // Чтение photoURL из базы, если есть
+  // Gender & Lang
+  let gender = 'other';
+  let lang = 'en';
   if (user.uid) {
-    const snap = await db.ref('users/' + user.uid + '/photoURL').once('value');
-    if (snap.exists() && snap.val()) photoURL = snap.val();
-  }
-    if (photoURL) {
-      profileAvatar.innerHTML = `<img src="${photoURL}" alt="avatar" style="width:72px;height:72px;object-fit:cover;border-radius:50%;background:#fff;" />`;
-    } else {
-      profileAvatar.innerHTML = `<svg width="72" height="72" viewBox="0 0 72 72" fill="none"><circle cx="36" cy="26" r="18" fill="#fff" stroke="#00B8D9" stroke-width="4"/><ellipse cx="36" cy="54" rx="25" ry="13" fill="#fff" stroke="#00B8D9" stroke-width="4"/><circle cx="36" cy="26" r="12" fill="#00B8D9" fill-opacity="0.18"/></svg>`;
+    const snap = await db.ref('users/' + user.uid + '/profile').once('value');
+    if (snap.exists() && snap.val()) {
+      const val = snap.val();
+      if (val.gender) gender = val.gender;
+      if (val.lang) lang = val.lang;
     }
+  }
+  if (profileGender) profileGender.value = gender;
+  if (profileLang) profileLang.value = lang;
   // Соцсети
   if (user.uid) {
     const snap = await db.ref('users/' + user.uid + '/social').once('value');
@@ -216,6 +217,55 @@ async function renderProfileModal(user) {
   renderSocialList();
   renderProfileSocialsView();
 }
+// Сохранение пола и языка
+if (profileGender) {
+  profileGender.onchange = async () => {
+    if (!auth.currentUser) return;
+    await db.ref('users/' + auth.currentUser.uid + '/profile/gender').set(profileGender.value);
+  };
+}
+if (profileLang) {
+  profileLang.onchange = async () => {
+    if (!auth.currentUser) return;
+    await db.ref('users/' + auth.currentUser.uid + '/profile/lang').set(profileLang.value);
+    setRulesLang(profileLang.value);
+  };
+}
+
+// Автоматическое определение языка и установка правил
+function detectUserLang() {
+  let lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+  if (lang.startsWith('ru')) return 'ru';
+  return 'en';
+}
+
+function setRulesLang(lang) {
+  // Скрыть/показать нужный блок правил
+  const rulesEn = document.querySelector('#rules');
+  const rulesRu = document.querySelector('#rules-ru');
+  if (rulesEn && rulesRu) {
+    if (lang === 'ru') {
+      rulesEn.style.display = 'none';
+      rulesRu.style.display = '';
+    } else {
+      rulesEn.style.display = '';
+      rulesRu.style.display = 'none';
+    }
+  }
+}
+
+// При загрузке: выставить язык правил и селектор профиля
+window.addEventListener('DOMContentLoaded', async () => {
+  // Для правил
+  let lang = detectUserLang();
+  // Если пользователь авторизован и есть lang в профиле — использовать его
+  if (auth.currentUser && auth.currentUser.uid) {
+    const snap = await db.ref('users/' + auth.currentUser.uid + '/profile/lang').once('value');
+    if (snap.exists() && snap.val()) lang = snap.val();
+  }
+  setRulesLang(lang);
+  if (profileLang) profileLang.value = lang;
+});
 
 
 if (profileBtn && profileModal) {

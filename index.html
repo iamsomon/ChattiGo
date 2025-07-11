@@ -38,107 +38,267 @@
       <button class="profile-close-btn" id="profileCloseBtn" title="Закрыть" style="position:absolute;top:12px;right:12px;background:#fff;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.13);border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;transition:box-shadow .18s;outline:none;z-index:1002;">
         <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" fill="#fff" stroke="#00B8D9" stroke-width="2.2"/><path d="M9.5 9.5l9 9M9.5 18.5l9-9" stroke="#00B8D9" stroke-width="2.4" stroke-linecap="round"/></svg>
       </button>
-      <div class="profile-avatar-wrap" style="position:relative;display:flex;justify-content:center;align-items:center;">
-        <div class="profile-avatar" id="profileAvatar" style="cursor:pointer;position:relative;">
-          <!-- Цветная аватарка, если есть фото, иначе SVG -->
-          <input type="file" id="editProfileAvatar" accept="image/*" style="display:none;" />
-          <div id="avatarOverlay" style="display:none;position:absolute;inset:0;background:rgba(0,184,217,0.18);backdrop-filter:blur(1.5px);border-radius:50%;align-items:center;justify-content:center;z-index:2;cursor:pointer;">
-            <svg width="38" height="38" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="19" fill="#fff" fill-opacity="0.7"/><path d="M19 11v16M11 19h16" stroke="#00B8D9" stroke-width="2.5" stroke-linecap="round"/></svg>
-          </div>
+      <!-- Удалена аватарка -->
+      <div class="profile-info" style="display:flex;flex-direction:column;align-items:center;gap:0.5em;">
+        <div class="profile-email" id="profileEmail" style="font-size:1.08em;color:#00B8D9;font-weight:500;">email@example.com</div>
+        <div class="profile-id" id="profileId" style="font-size:0.92em;color:#4fd1c5;margin-top:0.2em;">ID: ...</div>
+      </div>
+      <div class="profile-gender-lang" style="display:flex;gap:1em;justify-content:center;margin:1em 0 0.5em 0;">
+        <div class="gender-select" style="display:flex;align-items:center;gap:0.5em;">
+          <label for="profileGender" style="color:#00B8D9;font-weight:500;">Gender:</label>
+          <select id="profileGender" style="padding:0.3em 2.2em 0.3em 2em;border-radius:7px;border:1.5px solid #00B8D9;background:#181a1b;color:#fff;font-size:1em;">
+            <option value="male">&#9794; Male</option>
+            <option value="female">&#9792; Female</option>
+            <option value="other">&#9895; Other</option>
+          </select>
+        </div>
+        <div class="lang-select" style="display:flex;align-items:center;gap:0.5em;">
+          <label for="profileLang" style="color:#00B8D9;font-weight:500;">Language:</label>
+          <select id="profileLang" style="padding:0.3em 1.2em 0.3em 1em;border-radius:7px;border:1.5px solid #00B8D9;background:#181a1b;color:#fff;font-size:1em;">
+            <option value="en">English</option>
+            <option value="ru">Русский</option>
+          </select>
         </div>
       </div>
-      <div class="profile-info">
-        <div class="profile-name" id="profileName">Пользователь</div>
-        <div class="profile-email" id="profileEmail">email@example.com</div>
-        <div class="profile-id" id="profileId" style="font-size:0.92em;color:#4fd1c5;margin-top:0.2em;display:none;"></div>
-      </div>
       <div class="profile-actions" style="display:flex;flex-direction:column;align-items:center;gap:0.7em;width:100%;max-width:320px;margin:0 auto;">
-        <button id="editProfileBtn" class="profile-action-btn" style="width:100%;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20h4.5l10-10.1a2.1 2.1 0 0 0-3-3L5.5 17V20z" stroke="#00B8D9" stroke-width="2"/><path d="M14.5 6.5l3 3" stroke="#00B8D9" stroke-width="2"/></svg>
-          Редактировать
-        </button>
+        <div class="socials-block" style="width:100%;margin:1em 0 0.5em 0;">
+          <label style="color:#00B8D9;font-weight:500;font-size:1.08em;margin-bottom:0.2em;display:block;">Socials</label>
+          <div class="edit-socials-wrap" style="width:100%;display:flex;flex-direction:column;gap:0.5em;">
+            <div id="editSocialList" style="display:flex;flex-wrap:wrap;gap:0.5em;"></div>
+            <div style="display:flex;align-items:center;gap:0.5em;">
+              <input id="editSocialInput" type="text" maxlength="64" placeholder="Add social link" style="flex:1;padding:0.6em 1em;font-size:1em;border-radius:7px;border:1.5px solid #00B8D9;background:#181a1b;color:#fff;outline:none;" />
+              <button type="button" id="addSocialBtn" style="background:#00B8D9;border:none;cursor:pointer;padding:0 0.7em;height:38px;display:flex;align-items:center;border-radius:50%;transition:background .18s;">
+                <svg width="22" height="22" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#fff" fill-opacity="0.13"/><path d="M14 8v12M8 14h12" stroke="#00B8D9" stroke-width="2.2" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
         <button id="logoutProfileBtn" class="profile-action-btn danger" style="width:100%;margin-top:0.2em;">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M16 17l5-5-5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="5" width="6" height="14" rx="2" stroke="#fff" stroke-width="2"/></svg>
           Выйти
         </button>
-        <form id="editProfileForm" class="edit-profile-form" style="display:none;flex-direction:column;align-items:center;gap:0.7em;margin-top:1em;width:100%;max-width:320px;">
-          <label for="editProfileName" style="color:#00B8D9;font-weight:500;font-size:1.08em;margin-bottom:0.2em;align-self:flex-start;">Имя профиля</label>
-          <input id="editProfileName" type="text" maxlength="32" placeholder="Введите имя" required style="padding:0.7em 1em;font-size:1.1em;border-radius:7px;border:1.5px solid #00B8D9;background:#181a1b;color:#fff;width:100%;outline:none;" />
-          <div class="edit-socials-wrap" style="width:100%;display:flex;flex-direction:column;gap:0.5em;margin-top:0.7em;">
-            <div id="editSocialList" style="display:flex;flex-direction:column;gap:0.4em;"></div>
-            <div style="display:flex;align-items:center;gap:0.5em;">
-              <input id="editSocialInput" type="text" maxlength="64" placeholder="Добавить соцсеть (ссылка)" style="flex:1;padding:0.6em 1em;font-size:1em;border-radius:7px;border:1.5px solid #00B8D9;background:#181a1b;color:#fff;outline:none;" />
-              <button type="button" id="addSocialBtn" style="background:none;border:none;cursor:pointer;padding:0 0.3em;display:flex;align-items:center;">
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#00B8D9" fill-opacity="0.13"/><path d="M14 8v12M8 14h12" stroke="#00B8D9" stroke-width="2.2" stroke-linecap="round"/></svg>
-              </button>
-            </div>
-          </div>
-          <button type="submit" class="profile-action-btn" style="background:#00B8D9;color:#fff;width:100%;margin-top:0.5em;">Сохранить</button>
-          <button type="button" id="cancelEditProfileBtn" class="profile-action-btn" style="background:#232323;color:#fff;width:100%;">Отмена</button>
-        </form>
       </div>
     </div>
   </div>
   </header>
-  <div class="app-container">
-    <div class="video-container">
-      <div class="remote-video-wrap">
-        <video id="remoteVideo" class="remote-video" autoplay playsinline></video>
-        <div id="searchingOverlay" class="searching-overlay hidden">
-          <div class="search-svg-spinner" style="width:72px;height:36px;display:flex;align-items:center;justify-content:center;">
-            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 150' width="72" height="36">
-              <path fill='none' stroke='#008C8C' stroke-width='17' stroke-linecap='round' stroke-dasharray='300 385' stroke-dashoffset='0' d='M275 75c0 31-27 50-50 50-58 0-92-100-150-100-28 0-50 22-50 50s23 50 50 50c58 0 92-100 150-100 24 0 50 19 50 50Z'>
-                <animate attributeName='stroke-dashoffset' calcMode='spline' dur='2' values='685;-685' keySplines='0 0 1 1' repeatCount='indefinite'></animate>
-              </path>
-            </svg>
+  <div class="main-video-area" style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;position:relative;">
+    <div class="app-container">
+      <div class="video-container">
+        <div class="remote-video-wrap">
+          <video id="remoteVideo" class="remote-video" autoplay playsinline></video>
+          <div id="searchingOverlay" class="searching-overlay hidden">
+            <div class="search-svg-spinner" style="width:72px;height:36px;display:flex;align-items:center;justify-content:center;">
+              <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 150' width="72" height="36">
+                <path fill='none' stroke='#008C8C' stroke-width='17' stroke-linecap='round' stroke-dasharray='300 385' stroke-dashoffset='0' d='M275 75c0 31-27 50-50 50-58 0-92-100-150-100-28 0-50 22-50 50s23 50 50 50c58 0 92-100 150-100 24 0 50 19 50 50Z'>
+                  <animate attributeName='stroke-dashoffset' calcMode='spline' dur='2' values='685;-685' keySplines='0 0 1 1' repeatCount='indefinite'></animate>
+                </path>
+              </svg>
+            </div>
+            <div class="search-text">Поиск собеседника…</div>
           </div>
-          <div class="search-text">Поиск собеседника…</div>
+        </div>
+        <video id="localVideo" class="local-video" autoplay muted playsinline></video>
+        <div class="call-controls">
+          <button id="micBtn" class="control-btn" aria-pressed="true" title="Микрофон">
+            <!-- Микрофон 2025 -->
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="10" y="5" width="8" height="14" rx="4" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="8" y="19" width="12" height="3" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="13" y="22" width="2" height="3" rx="1" fill="currentColor"/></svg>
+          </button>
+          <button id="camBtn" class="control-btn" aria-pressed="true" title="Камера">
+            <!-- Камера 2025 -->
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="8" width="16" height="12" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="14" r="3.2" stroke="#007aff" stroke-width="2"/><rect x="20" y="11" width="4" height="6" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
+          </button>
+          <button id="stopBtn" class="control-btn danger" title="Стоп">
+            <!-- Стоп 2025 -->
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="7" y="7" width="14" height="14" rx="4" fill="currentColor"/></svg>
+          </button>
+          <button id="nextBtn" class="control-btn" title="Следующий">
+            <!-- Следующий 2025 -->
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M10 7l8 7-8 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button id="chatBtn" class="control-btn" title="Чат">
+            <!-- Чат 2025 -->
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="3" y="5" width="22" height="14" rx="5" fill="#222" stroke="currentColor" stroke-width="2.2"/><circle cx="9" cy="12" r="1.5" fill="#007aff"/><circle cx="14" cy="12" r="1.5" fill="#007aff"/><circle cx="19" cy="12" r="1.5" fill="#007aff"/><path d="M8 19l-3 3" stroke="#007aff" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+          <button id="splitBtn" class="control-btn" title="Переключить режим">
+            <!-- Split 2025 -->
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="16" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
+          </button>
         </div>
       </div>
-      <video id="localVideo" class="local-video" autoplay muted playsinline></video>
-      <div class="call-controls">
-        <button id="micBtn" class="control-btn" aria-pressed="true" title="Микрофон">
-          <!-- Микрофон 2025 -->
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="10" y="5" width="8" height="14" rx="4" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="8" y="19" width="12" height="3" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="13" y="22" width="2" height="3" rx="1" fill="currentColor"/></svg>
-        </button>
-        <button id="camBtn" class="control-btn" aria-pressed="true" title="Камера">
-          <!-- Камера 2025 -->
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="8" width="16" height="12" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="14" r="3.2" stroke="#007aff" stroke-width="2"/><rect x="20" y="11" width="4" height="6" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
-        </button>
-        <button id="stopBtn" class="control-btn danger" title="Стоп">
-          <!-- Стоп 2025 -->
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="7" y="7" width="14" height="14" rx="4" fill="currentColor"/></svg>
-        </button>
-        <button id="nextBtn" class="control-btn" title="Следующий">
-          <!-- Следующий 2025 -->
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M10 7l8 7-8 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <button id="chatBtn" class="control-btn" title="Чат">
-          <!-- Чат 2025 -->
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="3" y="5" width="22" height="14" rx="5" fill="#222" stroke="currentColor" stroke-width="2.2"/><circle cx="9" cy="12" r="1.5" fill="#007aff"/><circle cx="14" cy="12" r="1.5" fill="#007aff"/><circle cx="19" cy="12" r="1.5" fill="#007aff"/><path d="M8 19l-3 3" stroke="#007aff" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-        <button id="splitBtn" class="control-btn" title="Переключить режим">
-          <!-- Split 2025 -->
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="16" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
-        </button>
-      </div>
-    </div>
-    <div class="chat-panel" id="chatPanel">
-      <div class="chat-panel-overlay" id="chatOverlay"></div>
-      <div class="chat-panel-content">
-        <button class="chat-close-btn" id="chatCloseBtn" title="Закрыть чат">×</button>
-        <div class="chat-messages" id="chatMessages"></div>
-        <div id="typingIndicator" class="hidden" style="font-size:0.95em;color:#888;padding:2px 10px 2px 10px;">Собеседник печатает...</div>
-        <div class="chat-input-container">
-          <form class="chat-form" id="chatForm">
-            <input type="text" id="chatInput" class="chat-input" placeholder="Введите сообщение...">
-            <button type="submit" class="send-btn">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M22 2 11 13" stroke="currentColor" stroke-width="2"/><path d="M22 2 15 22l-4-9-9-4 20-7Z" stroke="currentColor" stroke-width="2"/></svg>
-            </button>
-          </form>
+      <div class="chat-panel" id="chatPanel">
+        <div class="chat-panel-overlay" id="chatOverlay"></div>
+        <div class="chat-panel-content">
+          <button class="chat-close-btn" id="chatCloseBtn" title="Закрыть чат">×</button>
+          <div class="chat-messages" id="chatMessages"></div>
+          <div id="typingIndicator" class="hidden" style="font-size:0.95em;color:#888;padding:2px 10px 2px 10px;">Собеседник печатает...</div>
+          <div class="chat-input-container">
+            <form class="chat-form" id="chatForm">
+              <input type="text" id="chatInput" class="chat-input" placeholder="Введите сообщение...">
+              <button type="submit" class="send-btn">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M22 2 11 13" stroke="currentColor" stroke-width="2"/><path d="M22 2 15 22l-4-9-9-4 20-7Z" stroke="currentColor" stroke-width="2"/></svg>
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Информационный блок с хеддером и секциями -->
+  <div class="info-section" style="min-height:100vh;background:#181a1b;color:#fff;">
+    <header class="sticky-header" style="position:sticky;top:0;z-index:1002;background:#181a1b;padding:1.2em 0 0.7em 0;box-shadow:0 2px 8px rgba(0,0,0,0.10);display:flex;gap:2em;justify-content:center;align-items:center;">
+      <nav style="display:flex;gap:2em;">
+        <a href="#about" style="color:#00B8D9;font-weight:600;text-decoration:none;font-size:1.1em;">About</a>
+        <a href="#rules" style="color:#00B8D9;font-weight:600;text-decoration:none;font-size:1.1em;">Rules</a>
+        <a href="#faq" style="color:#00B8D9;font-weight:600;text-decoration:none;font-size:1.1em;">FAQ</a>
+        <a href="#contacts" style="color:#00B8D9;font-weight:600;text-decoration:none;font-size:1.1em;">Contacts</a>
+      </nav>
+    </header>
+    <section id="about" style="max-width:700px;margin:2em auto 0 auto;padding:0 1em;">
+      <h2 style="color:#00B8D9;">About ChattiGo</h2>
+      <p>ChattiGo is a minimalist chat-roulette for instant video conversations. No registration required, just click and connect!</p>
+    </section>
+    <section id="rules" style="max-width:700px;margin:2em auto 0 auto;padding:0 1em;">
+      <h2 style="color:#00B8D9;">ChattiGo Terms of Use — Safe and Respectful Video Chatting</h2>
+      <p>ChattiGo is a platform where you can meet and talk to new people via real-time video chat. Our goal is to offer a positive, safe, and respectful space for everyone.</p>
+      <p>Please read these rules before using the service. Violations may result in immediate suspension.</p>
+      <ol style="line-height:1.7;font-size:1.08em; padding-left:1.2em;">
+        <li><b>Respectful behavior is mandatory</b><br>
+          <span style="color:#ffb300;">Prohibited:</span>
+          <ul>
+            <li>Profanity or offensive language.</li>
+            <li>Insults, threats, or intimidation.</li>
+            <li>Obscene or aggressive gestures.</li>
+            <li>Any form of discrimination based on race, gender, religion, appearance, etc.</li>
+          </ul>
+        </li>
+        <li><b>Strict ban on inappropriate conduct</b><br>
+          <span style="color:#ffb300;">Forbidden:</span>
+          <ul>
+            <li>Appearing naked or in underwear.</li>
+            <li>Displaying intimate parts or suggestive behavior.</li>
+            <li>Inappropriate gestures (e.g. licking lips, touching body, etc.).</li>
+            <li>Sexual content or suggestive emojis/slang.</li>
+          </ul>
+        </li>
+        <li><b>No external media or video manipulation</b><br>
+          <span style="color:#ffb300;">Not allowed:</span>
+          <ul>
+            <li>Pointing the camera at screens or printed material.</li>
+            <li>Using avatars, filters, or any video-altering software.</li>
+          </ul>
+        </li>
+        <li><b>Advertising and spam are strictly prohibited</b><br>
+          <span style="color:#ffb300;">You must not:</span>
+          <ul>
+            <li>Promote websites, services, or social media.</li>
+            <li>Send links or ask users to perform online actions (like, follow, click, etc.).</li>
+          </ul>
+        </li>
+        <li><b>Reporting violations</b><br>
+          You can report misconduct using the in-chat report button. Moderators will review each case, and repeated reports can trigger auto-blocking.
+        </li>
+        <li><b>Age restrictions</b><br>
+          Only legal adults may use ChattiGo. Minors are strictly forbidden, even with parental supervision.
+        </li>
+        <li><b>Do not interfere with the service</b><br>
+          <span style="color:#ffb300;">Not allowed:</span>
+          <ul>
+            <li>External programs (bots, scripts, plugins).</li>
+            <li>Attempts to damage or exploit the service.</li>
+          </ul>
+        </li>
+      </ol>
+      <h3 style="color:#00B8D9;margin-top:1.5em;">Tips for a better chat experience:</h3>
+      <ul style="line-height:1.7;font-size:1.08em;">
+        <li>Keep your face visible.</li>
+        <li>Ensure proper lighting.</li>
+        <li>Disconnect if you step away.</li>
+        <li>Don’t allow others to use your device.</li>
+        <li>Avoid using the chat in private spaces like bathrooms.</li>
+        <li>Watch what appears in your camera frame.</li>
+      </ul>
+      <h3 style="color:#00B8D9;margin-top:1.5em;">Privacy and Responsibility</h3>
+      <p>You are responsible for what you share. Don’t provide personal information unless you accept the risks.</p>
+      <h3 style="color:#00B8D9;margin-top:1.5em;">Policy updates</h3>
+      <p>ChattiGo reserves the right to update these terms without notice. By using the service, you agree to the current version.</p>
+    </section>
+
+    <!-- Русский блок правил, скрыт по умолчанию -->
+    <section id="rules-ru" style="max-width:700px;margin:2em auto 0 auto;padding:0 1em; display:none;">
+      <h2 style="color:#00B8D9;">Правила ChattiGo — Безопасный и уважительный видеочат</h2>
+      <p>ChattiGo — это платформа для знакомств и общения с новыми людьми через видеочат в реальном времени. Наша цель — создать позитивное, безопасное и уважительное пространство для всех.</p>
+      <p>Пожалуйста, ознакомьтесь с этими правилами перед использованием сервиса. Нарушения могут привести к немедленной блокировке.</p>
+      <ol style="line-height:1.7;font-size:1.08em; padding-left:1.2em;">
+        <li><b>Обязательное уважительное поведение</b><br>
+          <span style="color:#ffb300;">Запрещено:</span>
+          <ul>
+            <li>Нецензурная или оскорбительная лексика.</li>
+            <li>Оскорбления, угрозы, запугивание.</li>
+            <li>Непристойные или агрессивные жесты.</li>
+            <li>Любая дискриминация по расе, полу, религии, внешности и т.д.</li>
+          </ul>
+        </li>
+        <li><b>Строгий запрет на непристойное поведение</b><br>
+          <span style="color:#ffb300;">Запрещено:</span>
+          <ul>
+            <li>Появляться обнажённым или в нижнем белье.</li>
+            <li>Демонстрировать интимные части тела или провокационное поведение.</li>
+            <li>Непристойные жесты (например, облизывание губ, прикосновения к телу и т.д.).</li>
+            <li>Сексуальный контент или намёки, эмодзи/сленг.</li>
+          </ul>
+        </li>
+        <li><b>Запрет на внешние медиа и манипуляции с видео</b><br>
+          <span style="color:#ffb300;">Нельзя:</span>
+          <ul>
+            <li>Направлять камеру на экраны или печатные материалы.</li>
+            <li>Использовать аватары, фильтры или любое ПО для изменения видео.</li>
+          </ul>
+        </li>
+        <li><b>Реклама и спам строго запрещены</b><br>
+          <span style="color:#ffb300;">Нельзя:</span>
+          <ul>
+            <li>Продвигать сайты, сервисы или соцсети.</li>
+            <li>Отправлять ссылки или просить выполнить онлайн-действия (лайк, подписка, клик и т.д.).</li>
+          </ul>
+        </li>
+        <li><b>Жалобы на нарушения</b><br>
+          Вы можете пожаловаться на нарушения через кнопку жалобы в чате. Модераторы рассмотрят каждый случай, а повторные жалобы могут привести к автозапрету.
+        </li>
+        <li><b>Возрастные ограничения</b><br>
+          Пользоваться ChattiGo могут только совершеннолетние. Несовершеннолетним строго запрещено, даже с разрешения родителей.
+        </li>
+        <li><b>Не вмешивайтесь в работу сервиса</b><br>
+          <span style="color:#ffb300;">Нельзя:</span>
+          <ul>
+            <li>Использовать внешние программы (боты, скрипты, плагины).</li>
+            <li>Пытаться повредить или взломать сервис.</li>
+          </ul>
+        </li>
+      </ol>
+      <h3 style="color:#00B8D9;margin-top:1.5em;">Советы для лучшего общения:</h3>
+      <ul style="line-height:1.7;font-size:1.08em;">
+        <li>Держите лицо в кадре.</li>
+        <li>Обеспечьте хорошее освещение.</li>
+        <li>Отключайтесь, если отходите.</li>
+        <li>Не давайте пользоваться устройством другим.</li>
+        <li>Не используйте чат в личных помещениях (ванная и т.д.).</li>
+        <li>Следите, что попадает в кадр.</li>
+      </ul>
+      <h3 style="color:#00B8D9;margin-top:1.5em;">Конфиденциальность и ответственность</h3>
+      <p>Вы сами отвечаете за то, что делитесь. Не передавайте личные данные, если не готовы к рискам.</p>
+      <h3 style="color:#00B8D9;margin-top:1.5em;">Обновления правил</h3>
+      <p>ChattiGo оставляет за собой право обновлять эти правила без уведомления. Используя сервис, вы соглашаетесь с актуальной версией.</p>
+    </section>
+    <section id="faq" style="max-width:700px;margin:2em auto 0 auto;padding:0 1em;">
+      <h2 style="color:#00B8D9;">FAQ</h2>
+      <p>Q: Is ChattiGo free?<br>A: Yes, it's completely free and anonymous.</p>
+      <p>Q: Can I use it on mobile?<br>A: Yes, ChattiGo is fully responsive.</p>
+    </section>
+    <section id="contacts" style="max-width:700px;margin:2em auto 2em auto;padding:0 1em;">
+      <h2 style="color:#00B8D9;">Contacts</h2>
+      <p>Email: <a href="mailto:support@chattigo.com" style="color:#4fd1c5;">support@chattigo.com</a></p>
+    </section>
   </div>
   <div id="authModal" class="modal hidden">
     <div class="auth-modal-content">
