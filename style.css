@@ -199,10 +199,14 @@
 }
 
 /* --- call-controls отдельным блоком над хеддером --- */
+/* --- call-controls всегда закреплён сверху, над sticky-header --- */
 .call-controls {
+  position: sticky;
+  top: 0;
+  z-index: 1003;
   width: 100vw;
   max-width: 700px;
-  margin: 0 auto 0 auto;
+  margin: 0 auto;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -212,8 +216,6 @@
   padding: 0.5em 0 0.5em 0;
   border-radius: 0 0 18px 18px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-  position: relative;
-  z-index: 1001;
 }
 
 @media (max-width: 800px) {
@@ -223,10 +225,17 @@
     padding: 0 0.2em;
   }
   .call-controls {
+    position: sticky;
+    top: 0;
+    z-index: 1003;
+    width: 100vw;
     max-width: 100vw;
     gap: 12px;
     padding: 0.4em 0 0.4em 0;
     border-radius: 0 0 12px 12px;
+    margin: 0 auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    background: #181a1b;
   }
 }
 @media (max-width: 600px) {
@@ -253,15 +262,17 @@
     margin: 0;
   }
   .call-controls {
+    position: sticky;
+    top: 0;
+    z-index: 1003;
     width: 100vw;
     max-width: 100vw;
     gap: 10px;
     padding: 0.4em 0 0.4em 0;
     border-radius: 0 0 12px 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    margin: 0 auto 0 auto;
-    position: relative;
-    z-index: 1001;
+    margin: 0 auto;
+    background: #181a1b;
   }
   .control-btn {
     width: 44px;
@@ -574,20 +585,7 @@ body.split-mode .local-video {
 /* --- call-controls поверх всего, без перекрытий --- */
 
 /* --- call-controls теперь идут внутри sticky-header и прокручиваются вместе с ним --- */
-.call-controls {
-  position: static;
-  width: auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  background: none;
-  pointer-events: auto;
-  z-index: 1;
-  margin: 0 0 0 1.2em;
-  padding: 0;
-}
+
 
 @media (max-width: 600px) {
   .auth-modal-content {
