@@ -211,9 +211,9 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
   background: #181a1b;
-  padding: 0.5em 0 0.5em 0;
+  padding: 0.4em 0 0.4em 0;
   border-radius: 0 0 18px 18px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.10);
 }
@@ -225,17 +225,9 @@
     padding: 0 0.2em;
   }
   .call-controls {
-    position: sticky;
-    top: 0;
-    z-index: 1003;
-    width: 100vw;
     max-width: 100vw;
     gap: 12px;
-    padding: 0.4em 0 0.4em 0;
     border-radius: 0 0 12px 12px;
-    margin: 0 auto;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    background: #181a1b;
   }
 }
 @media (max-width: 600px) {
@@ -262,17 +254,9 @@
     margin: 0;
   }
   .call-controls {
-    position: sticky;
-    top: 0;
-    z-index: 1003;
-    width: 100vw;
     max-width: 100vw;
     gap: 10px;
-    padding: 0.4em 0 0.4em 0;
     border-radius: 0 0 12px 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    margin: 0 auto;
-    background: #181a1b;
   }
   .control-btn {
     width: 44px;
@@ -359,9 +343,7 @@
     box-shadow: none !important;
     overflow-x: hidden;
   }
-  .info-section {
-    display: none;
-  }
+  /* .info-section { display: none; }  УБРАНО, чтобы не скрывать блок на мобилках */
 }
 body:not(.split-mode) .remote-video {
   object-fit: contain;
