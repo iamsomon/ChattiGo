@@ -383,6 +383,10 @@ html, body {
   background: #111;
   border-radius: 0 !important;
   width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
 }
   opacity: 1;
 .info-section {
@@ -572,33 +576,29 @@ body.split-mode .local-video {
 }
 
 body, html {
-  width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  min-width: 100vw;
   background: #181a1b !important;
   color: #fff;
-  overflow: hidden;
+  margin: 0;
 }
-
 .app-container {
-  display: flex;
   width: 100vw;
-  height: 100vh;
   background: #181a1b;
   border-radius: 0 !important;
   margin: 0;
   box-shadow: none !important;
-  overflow: hidden;
 }
 
 .video-container {
-  flex: 1;
   position: relative;
   background: #111;
   border-radius: 0 !important;
+  width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 60vh;
 }
 
 .remote-video, .local-video {
