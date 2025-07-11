@@ -179,7 +179,7 @@
   border-radius: 18px;
 }
 
-/* --- sticky-header и call-controls как единый sticky-bar --- */
+/* --- sticky-header только для хедера --- */
 .sticky-header {
   position: sticky;
   top: 0;
@@ -198,11 +198,35 @@
   gap: 1.5em;
 }
 
+/* --- call-controls отдельным блоком над хеддером --- */
+.call-controls {
+  width: 100vw;
+  max-width: 700px;
+  margin: 0 auto 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  background: #181a1b;
+  padding: 0.5em 0 0.5em 0;
+  border-radius: 0 0 18px 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  position: relative;
+  z-index: 1001;
+}
+
 @media (max-width: 800px) {
   .sticky-header {
     height: 54px;
     gap: 0.7em;
     padding: 0 0.2em;
+  }
+  .call-controls {
+    max-width: 100vw;
+    gap: 12px;
+    padding: 0.4em 0 0.4em 0;
+    border-radius: 0 0 12px 12px;
   }
 }
 @media (max-width: 600px) {
@@ -229,17 +253,15 @@
     margin: 0;
   }
   .call-controls {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    margin: 0 0 0 0.5em;
-    padding: 0;
-    width: auto;
-    background: none;
-    pointer-events: auto;
-    z-index: 1;
+    width: 100vw;
+    max-width: 100vw;
+    gap: 10px;
+    padding: 0.4em 0 0.4em 0;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    margin: 0 auto 0 auto;
+    position: relative;
+    z-index: 1001;
   }
   .control-btn {
     width: 44px;
