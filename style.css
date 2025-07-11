@@ -360,52 +360,56 @@ body:not(.split-mode) .remote-video {
 html, body {
   overscroll-behavior: none;
   -webkit-user-select: none;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
   user-select: none;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   min-height: 100vh;
   min-width: 100vw;
-}
-
 body {
   margin: 0;
-  padding: 0;
-  background: #181a1b;
+body, html {
+  width: 100vw;
+  min-height: 100vh;
+  background: #181a1b !important;
+  color: #fff;
+  /* overflow: visible; */
 }
-
-* {
-  -webkit-touch-callout: none;
-  -webkit-user-drag: none;
 }
-
-@media (max-width: 600px) {
-  .app-container {
-    padding-bottom: 0 !important;
-    margin-bottom: 0 !important;
-  }
-  .call-controls {
-    bottom: 0 !important;
-  }
-}
-
-/* Анимации */
-.modal, .search-modal, .chat-panel, .auth-modal-content, .search-box {
-  transition: opacity 0.25s cubic-bezier(0.4,0,0.2,1), transform 0.25s cubic-bezier(0.4,0,0.2,1);
-}
-.modal.hidden, .search-modal.hidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: scale(0.98);
-}
-.modal:not(.hidden), .search-modal:not(.hidden) {
-  opacity: 1;
-  pointer-events: all;
-  transform: scale(1);
-}
-/* SPLIT MODE */
-body.split-mode .video-container {
+.app-container {
   display: flex;
-  flex-direction: row;
+  width: 100vw;
+  min-height: 100vh;
+  background: #181a1b;
+  border-radius: 0 !important;
+  margin: 0;
+  box-shadow: none !important;
+  /* overflow: visible; */
+}
+
+.video-container {
+  flex: 1;
+  position: relative;
+  background: #111;
+  border-radius: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  /* overflow: visible; */
+}
+  opacity: 1;
+.info-section {
+  min-height: 100vh;
+  background: #181a1b;
+  color: #fff;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  width: 100vw;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
   width: 100vw;
   height: 100vh;
   position: relative;
