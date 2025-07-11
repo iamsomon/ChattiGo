@@ -65,32 +65,7 @@
     </div>
   </div>
   </header>
-  <div class="main-video-area" style="display:flex;flex-direction:column;position:relative;">
-    <div class="app-container">
-      <div class="video-container">
-        <div class="remote-video-wrap">
-          <video id="remoteVideo" class="remote-video" autoplay playsinline></video>
-        </div>
-        <video id="localVideo" class="local-video" autoplay muted playsinline></video>
-      </div>
-      <div class="chat-panel" id="chatPanel">
-        <div class="chat-panel-overlay" id="chatOverlay"></div>
-        <div class="chat-panel-content">
-          <button class="chat-close-btn" id="chatCloseBtn" title="Закрыть чат">×</button>
-          <div class="chat-messages" id="chatMessages"></div>
-          <div id="typingIndicator" class="hidden" style="font-size:0.95em;color:#888;padding:2px 10px 2px 10px;">Собеседник печатает...</div>
-          <div class="chat-input-container">
-            <form class="chat-form" id="chatForm">
-              <input type="text" id="chatInput" class="chat-input" placeholder="Введите сообщение...">
-              <button type="submit" class="send-btn">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M22 2 11 13" stroke="currentColor" stroke-width="2"/><path d="M22 2 15 22l-4-9-9-4 20-7Z" stroke="currentColor" stroke-width="2"/></svg>
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- ...удалён дублирующийся блок main-video-area с видео и чатом... -->
 
   <!-- Кнопки управления теперь внутри .main-video-area, над .video-container -->
   <div class="call-controls">
