@@ -220,8 +220,7 @@
     border-radius: 0;
   }
   .sticky-header {
-    flex-direction: column;
-    gap: 0.5em;
+    gap: 1em;
     padding: 0;
     width: 100%;
     min-width: 0;
@@ -230,6 +229,10 @@
     max-height: 54px;
     border-radius: 0;
     margin: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
   }
 }
 body:not(.split-mode) .remote-video {
@@ -515,8 +518,11 @@ body.split-mode .local-video {
   display: inline-block;
   width: 10px;
   height: 10px;
+  min-width: 10px;
+  min-height: 10px;
+  max-width: 10px;
+  max-height: 10px;
   border-radius: 50%;
-  min-height: 100vh;
   vertical-align: middle;
   background: #e74c3c; /* красная по умолчанию */
   transition: background 0.2s;
