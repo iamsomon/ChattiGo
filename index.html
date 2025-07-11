@@ -81,32 +81,6 @@
           </div>
         </div>
         <video id="localVideo" class="local-video" autoplay muted playsinline></video>
-        <div class="call-controls">
-          <button id="micBtn" class="control-btn" aria-pressed="true" title="Микрофон">
-            <!-- Микрофон 2025 -->
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="10" y="5" width="8" height="14" rx="4" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="8" y="19" width="12" height="3" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="13" y="22" width="2" height="3" rx="1" fill="currentColor"/></svg>
-          </button>
-          <button id="camBtn" class="control-btn" aria-pressed="true" title="Камера">
-            <!-- Камера 2025 -->
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="8" width="16" height="12" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="14" r="3.2" stroke="#007aff" stroke-width="2"/><rect x="20" y="11" width="4" height="6" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
-          </button>
-          <button id="stopBtn" class="control-btn danger" title="Стоп">
-            <!-- Стоп 2025 -->
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="7" y="7" width="14" height="14" rx="4" fill="currentColor"/></svg>
-          </button>
-          <button id="nextBtn" class="control-btn" title="Следующий">
-            <!-- Следующий 2025 -->
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M10 7l8 7-8 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <button id="chatBtn" class="control-btn" title="Чат">
-            <!-- Чат 2025 -->
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="3" y="5" width="22" height="14" rx="5" fill="#222" stroke="currentColor" stroke-width="2.2"/><circle cx="9" cy="12" r="1.5" fill="#007aff"/><circle cx="14" cy="12" r="1.5" fill="#007aff"/><circle cx="19" cy="12" r="1.5" fill="#007aff"/><path d="M8 19l-3 3" stroke="#007aff" stroke-width="2" stroke-linecap="round"/></svg>
-          </button>
-          <button id="splitBtn" class="control-btn" title="Переключить режим">
-            <!-- Split 2025 -->
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="16" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
-          </button>
-        </div>
       </div>
       <div class="chat-panel" id="chatPanel">
         <div class="chat-panel-overlay" id="chatOverlay"></div>
@@ -136,7 +110,26 @@
         <span id="onlineDot" class="online-dot offline"></span>
         <span id="onlineCount">0</span>
       </h1>
-      <!-- Гамбургер-меню удалено -->
+      <div class="call-controls">
+        <button id="micBtn" class="control-btn" aria-pressed="true" title="Микрофон">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="10" y="5" width="8" height="14" rx="4" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="8" y="19" width="12" height="3" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="13" y="22" width="2" height="3" rx="1" fill="currentColor"/></svg>
+        </button>
+        <button id="camBtn" class="control-btn" aria-pressed="true" title="Камера">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="8" width="16" height="12" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="14" r="3.2" stroke="#007aff" stroke-width="2"/><rect x="20" y="11" width="4" height="6" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
+        </button>
+        <button id="stopBtn" class="control-btn danger" title="Стоп">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="7" y="7" width="14" height="14" rx="4" fill="currentColor"/></svg>
+        </button>
+        <button id="nextBtn" class="control-btn" title="Следующий">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M10 7l8 7-8 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="chatBtn" class="control-btn" title="Чат">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="3" y="5" width="22" height="14" rx="5" fill="#222" stroke="currentColor" stroke-width="2.2"/><circle cx="9" cy="12" r="1.5" fill="#007aff"/><circle cx="14" cy="12" r="1.5" fill="#007aff"/><circle cx="19" cy="12" r="1.5" fill="#007aff"/><path d="M8 19l-3 3" stroke="#007aff" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button id="splitBtn" class="control-btn" title="Переключить режим">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="16" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
+        </button>
+      </div>
       <button id="profileBtn" title="Профиль" style="margin-left:auto;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;width:38px;height:38px;border-radius:50%;transition:box-shadow .18s;box-shadow:0 2px 8px rgba(0,0,0,0.10);">
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
           <circle cx="16" cy="16" r="15" fill="#fff" stroke="#00B8D9" stroke-width="2"/>
@@ -145,7 +138,6 @@
           <ellipse cx="16" cy="23" rx="7" ry="4" fill="#00B8D9" fill-opacity="0.10"/>
         </svg>
       </button>
-      <!-- Меню удалено, осталась только кнопка профиля -->
     </header>
     <section id="about" style="max-width:700px;margin:2em auto 0 auto;padding:0 1em;">
       <h2 style="color:#00B8D9;">About ChattiGo</h2>
