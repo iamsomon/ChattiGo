@@ -272,7 +272,7 @@
     overflow-x: hidden;
   }
   .video-container {
-    min-height: 50vh;
+    min-height: 0;
     height: auto;
     flex-direction: column;
     align-items: stretch;
@@ -281,6 +281,7 @@
     margin: 0;
     width: 100vw;
     background: #111;
+    overflow: visible;
   }
   .remote-video, .local-video {
     position: relative;
@@ -295,15 +296,17 @@
   }
   .local-video {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 90vw;
-    height: 48vw;
-    max-width: 96vw;
-    max-height: 60vw;
-    min-width: 0;
-    min-height: 120px;
+    right: 12px;
+    bottom: 12px;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: 120px;
+    height: 80px;
+    max-width: 40vw;
+    max-height: 30vw;
+    min-width: 60px;
+    min-height: 40px;
     aspect-ratio: 16/9;
     border-radius: 10px;
     object-fit: cover;
