@@ -465,7 +465,7 @@ body.split-mode .local-video {
   background: none;
   pointer-events: auto;
   z-index: 2000;
-  margin: 0 auto;
+  margin: 0;
 }
 
 @media (max-width: 600px) {
@@ -518,10 +518,7 @@ body.split-mode .local-video {
   display: inline-block;
   width: 10px;
   height: 10px;
-  min-width: 10px;
-  min-height: 10px;
-  max-width: 10px;
-  max-height: 10px;
+  /* Removed min-width, min-height, max-width, max-height */
   border-radius: 50%;
   vertical-align: middle;
   background: #e74c3c; /* красная по умолчанию */
@@ -630,12 +627,8 @@ body:not(.split-mode) .local-video {
     gap: 12px;
     padding-bottom: 1.2em;
     background: none !important;
-    position: static !important;
-    left: auto;
-    right: auto;
-    bottom: auto !important;
     z-index: 2000;
-    margin: 0 auto;
+    margin: 0;
   }
   .control-btn {
     min-width: 44px;
