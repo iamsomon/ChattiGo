@@ -103,27 +103,27 @@
   </div>
 
   <!-- Кнопки управления теперь внутри .main-video-area, над .video-container -->
+  <div class="call-controls">
+    <button id="micBtn" class="control-btn" aria-pressed="true" title="Микрофон">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="10" y="5" width="8" height="14" rx="4" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="8" y="19" width="12" height="3" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="13" y="22" width="2" height="3" rx="1" fill="currentColor"/></svg>
+    </button>
+    <button id="camBtn" class="control-btn" aria-pressed="true" title="Камера">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="8" width="16" height="12" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="14" r="3.2" stroke="#007aff" stroke-width="2"/><rect x="20" y="11" width="4" height="6" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
+    </button>
+    <button id="stopBtn" class="control-btn danger" title="Стоп">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="7" y="7" width="14" height="14" rx="4" fill="currentColor"/></svg>
+    </button>
+    <button id="nextBtn" class="control-btn" title="Следующий">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M10 7l8 7-8 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button id="chatBtn" class="control-btn" title="Чат">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="3" y="5" width="22" height="14" rx="5" fill="#222" stroke="currentColor" stroke-width="2.2"/><circle cx="9" cy="12" r="1.5" fill="#007aff"/><circle cx="14" cy="12" r="1.5" fill="#007aff"/><circle cx="19" cy="12" r="1.5" fill="#007aff"/><path d="M8 19l-3 3" stroke="#007aff" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button id="splitBtn" class="control-btn" title="Переключить режим">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="16" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
+    </button>
+  </div>
   <div class="main-video-area" style="display:flex;flex-direction:column;position:relative;">
-    <div class="call-controls">
-      <button id="micBtn" class="control-btn" aria-pressed="true" title="Микрофон">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="10" y="5" width="8" height="14" rx="4" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="8" y="19" width="12" height="3" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="13" y="22" width="2" height="3" rx="1" fill="currentColor"/></svg>
-      </button>
-      <button id="camBtn" class="control-btn" aria-pressed="true" title="Камера">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="8" width="16" height="12" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="14" r="3.2" stroke="#007aff" stroke-width="2"/><rect x="20" y="11" width="4" height="6" rx="1.5" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
-      </button>
-      <button id="stopBtn" class="control-btn danger" title="Стоп">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="7" y="7" width="14" height="14" rx="4" fill="currentColor"/></svg>
-      </button>
-      <button id="nextBtn" class="control-btn" title="Следующий">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M10 7l8 7-8 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <button id="chatBtn" class="control-btn" title="Чат">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="3" y="5" width="22" height="14" rx="5" fill="#222" stroke="currentColor" stroke-width="2.2"/><circle cx="9" cy="12" r="1.5" fill="#007aff"/><circle cx="14" cy="12" r="1.5" fill="#007aff"/><circle cx="19" cy="12" r="1.5" fill="#007aff"/><path d="M8 19l-3 3" stroke="#007aff" stroke-width="2" stroke-linecap="round"/></svg>
-      </button>
-      <button id="splitBtn" class="control-btn" title="Переключить режим">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/><rect x="16" y="5" width="8" height="18" rx="3" fill="#222" stroke="currentColor" stroke-width="2.2"/></svg>
-      </button>
-    </div>
     <div class="app-container">
       <div class="video-container">
         <div class="remote-video-wrap">
